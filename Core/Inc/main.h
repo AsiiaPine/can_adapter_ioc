@@ -31,7 +31,16 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+/* USB-CAN Protocol Commands */
+#define CMD_CAN_SEND      0x01
+#define CMD_CAN_RECEIVE   0x02
+#define CMD_CAN_STATUS    0x03
+#define CMD_CAN_CONFIG    0x04
+#define CMD_CAN_RESET     0x05
 
+/* Private define ------------------------------------------------------------*/
+#define USB_BUFFER_SIZE 64
+#define CAN_MAX_MESSAGES 10
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

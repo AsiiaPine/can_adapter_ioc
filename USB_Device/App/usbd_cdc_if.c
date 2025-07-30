@@ -266,8 +266,13 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
   if (usb_rx_index + *Len < USB_BUFFER_SIZE) {
     memcpy(&usb_rx_buffer[usb_rx_index], Buf, *Len);
     usb_rx_index += *Len;
+  } else {
+    // Buffer overflow, reset index
+    usb_rx_index = 0;
+    memcpy(&usb_rx_buffer[usb_rx_index], Buf, *Len);
+    // Optionally, you can handle the overflow case here (e.g., log an error)
   }
-  
+
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
   USBD_CDC_ReceivePacket(&hUsbDeviceFS);
   return (USBD_OK);

@@ -1,0 +1,169 @@
+ARM GAS  /tmp/ccpY5Eae.s 			page 1
+
+
+   1              		.cpu cortex-m0plus
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"iwdg.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Core/Src/iwdg.c"
+  18              		.section	.text.MX_IWDG_Init,"ax",%progbits
+  19              		.align	1
+  20              		.global	MX_IWDG_Init
+  21              		.syntax unified
+  22              		.code	16
+  23              		.thumb_func
+  25              	MX_IWDG_Init:
+  26              	.LFB496:
+   1:Core/Src/iwdg.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/iwdg.c **** /**
+   3:Core/Src/iwdg.c ****   ******************************************************************************
+   4:Core/Src/iwdg.c ****   * @file    iwdg.c
+   5:Core/Src/iwdg.c ****   * @brief   This file provides code for the configuration
+   6:Core/Src/iwdg.c ****   *          of the IWDG instances.
+   7:Core/Src/iwdg.c ****   ******************************************************************************
+   8:Core/Src/iwdg.c ****   * @attention
+   9:Core/Src/iwdg.c ****   *
+  10:Core/Src/iwdg.c ****   * Copyright (c) 2025 STMicroelectronics.
+  11:Core/Src/iwdg.c ****   * All rights reserved.
+  12:Core/Src/iwdg.c ****   *
+  13:Core/Src/iwdg.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  14:Core/Src/iwdg.c ****   * in the root directory of this software component.
+  15:Core/Src/iwdg.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  16:Core/Src/iwdg.c ****   *
+  17:Core/Src/iwdg.c ****   ******************************************************************************
+  18:Core/Src/iwdg.c ****   */
+  19:Core/Src/iwdg.c **** /* USER CODE END Header */
+  20:Core/Src/iwdg.c **** /* Includes ------------------------------------------------------------------*/
+  21:Core/Src/iwdg.c **** #include "iwdg.h"
+  22:Core/Src/iwdg.c **** 
+  23:Core/Src/iwdg.c **** /* USER CODE BEGIN 0 */
+  24:Core/Src/iwdg.c **** 
+  25:Core/Src/iwdg.c **** /* USER CODE END 0 */
+  26:Core/Src/iwdg.c **** 
+  27:Core/Src/iwdg.c **** IWDG_HandleTypeDef hiwdg;
+  28:Core/Src/iwdg.c **** 
+  29:Core/Src/iwdg.c **** /* IWDG init function */
+  30:Core/Src/iwdg.c **** void MX_IWDG_Init(void)
+  31:Core/Src/iwdg.c **** {
+  27              		.loc 1 31 1 view -0
+ARM GAS  /tmp/ccpY5Eae.s 			page 2
+
+
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31 0000 10B5     		push	{r4, lr}
+  32              	.LCFI0:
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 4, -8
+  35              		.cfi_offset 14, -4
+  32:Core/Src/iwdg.c **** 
+  33:Core/Src/iwdg.c ****   /* USER CODE BEGIN IWDG_Init 0 */
+  34:Core/Src/iwdg.c **** 
+  35:Core/Src/iwdg.c ****   /* USER CODE END IWDG_Init 0 */
+  36:Core/Src/iwdg.c **** 
+  37:Core/Src/iwdg.c ****   /* USER CODE BEGIN IWDG_Init 1 */
+  38:Core/Src/iwdg.c **** 
+  39:Core/Src/iwdg.c ****   /* USER CODE END IWDG_Init 1 */
+  40:Core/Src/iwdg.c ****   hiwdg.Instance = IWDG;
+  36              		.loc 1 40 3 view .LVU1
+  37              		.loc 1 40 18 is_stmt 0 view .LVU2
+  38 0002 0848     		ldr	r0, .L4
+  39 0004 084B     		ldr	r3, .L4+4
+  40 0006 0360     		str	r3, [r0]
+  41:Core/Src/iwdg.c ****   hiwdg.Init.Prescaler = IWDG_PRESCALER_4;
+  41              		.loc 1 41 3 is_stmt 1 view .LVU3
+  42              		.loc 1 41 24 is_stmt 0 view .LVU4
+  43 0008 0023     		movs	r3, #0
+  44 000a 4360     		str	r3, [r0, #4]
+  42:Core/Src/iwdg.c ****   hiwdg.Init.Window = 4095;
+  45              		.loc 1 42 3 is_stmt 1 view .LVU5
+  46              		.loc 1 42 21 is_stmt 0 view .LVU6
+  47 000c 074B     		ldr	r3, .L4+8
+  48 000e C360     		str	r3, [r0, #12]
+  43:Core/Src/iwdg.c ****   hiwdg.Init.Reload = 4095;
+  49              		.loc 1 43 3 is_stmt 1 view .LVU7
+  50              		.loc 1 43 21 is_stmt 0 view .LVU8
+  51 0010 8360     		str	r3, [r0, #8]
+  44:Core/Src/iwdg.c ****   if (HAL_IWDG_Init(&hiwdg) != HAL_OK)
+  52              		.loc 1 44 3 is_stmt 1 view .LVU9
+  53              		.loc 1 44 7 is_stmt 0 view .LVU10
+  54 0012 FFF7FEFF 		bl	HAL_IWDG_Init
+  55              	.LVL0:
+  56              		.loc 1 44 6 discriminator 1 view .LVU11
+  57 0016 0028     		cmp	r0, #0
+  58 0018 00D1     		bne	.L3
+  59              	.L1:
+  45:Core/Src/iwdg.c ****   {
+  46:Core/Src/iwdg.c ****     Error_Handler();
+  47:Core/Src/iwdg.c ****   }
+  48:Core/Src/iwdg.c ****   /* USER CODE BEGIN IWDG_Init 2 */
+  49:Core/Src/iwdg.c **** 
+  50:Core/Src/iwdg.c ****   /* USER CODE END IWDG_Init 2 */
+  51:Core/Src/iwdg.c **** 
+  52:Core/Src/iwdg.c **** }
+  60              		.loc 1 52 1 view .LVU12
+  61              		@ sp needed
+  62 001a 10BD     		pop	{r4, pc}
+  63              	.L3:
+ARM GAS  /tmp/ccpY5Eae.s 			page 3
+
+
+  46:Core/Src/iwdg.c ****   }
+  64              		.loc 1 46 5 is_stmt 1 view .LVU13
+  65 001c FFF7FEFF 		bl	Error_Handler
+  66              	.LVL1:
+  67              		.loc 1 52 1 is_stmt 0 view .LVU14
+  68 0020 FBE7     		b	.L1
+  69              	.L5:
+  70 0022 C046     		.align	2
+  71              	.L4:
+  72 0024 00000000 		.word	hiwdg
+  73 0028 00300040 		.word	1073754112
+  74 002c FF0F0000 		.word	4095
+  75              		.cfi_endproc
+  76              	.LFE496:
+  78              		.global	hiwdg
+  79              		.section	.bss.hiwdg,"aw",%nobits
+  80              		.align	2
+  83              	hiwdg:
+  84 0000 00000000 		.space	16
+  84      00000000 
+  84      00000000 
+  84      00000000 
+  85              		.text
+  86              	.Letext0:
+  87              		.file 2 "/usr/arm-none-eabi/include/machine/_default_types.h"
+  88              		.file 3 "/usr/arm-none-eabi/include/sys/_stdint.h"
+  89              		.file 4 "Drivers/CMSIS/Device/ST/STM32G0xx/Include/stm32g0b1xx.h"
+  90              		.file 5 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_def.h"
+  91              		.file 6 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_iwdg.h"
+  92              		.file 7 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_ll_dma.h"
+  93              		.file 8 "Core/Inc/iwdg.h"
+  94              		.file 9 "Core/Inc/main.h"
+ARM GAS  /tmp/ccpY5Eae.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 iwdg.c
+     /tmp/ccpY5Eae.s:19     .text.MX_IWDG_Init:00000000 $t
+     /tmp/ccpY5Eae.s:25     .text.MX_IWDG_Init:00000000 MX_IWDG_Init
+     /tmp/ccpY5Eae.s:72     .text.MX_IWDG_Init:00000024 $d
+     /tmp/ccpY5Eae.s:83     .bss.hiwdg:00000000 hiwdg
+     /tmp/ccpY5Eae.s:80     .bss.hiwdg:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_IWDG_Init
+Error_Handler

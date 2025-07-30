@@ -1,0 +1,1073 @@
+ARM GAS  /tmp/ccWkPmLZ.s 			page 1
+
+
+   1              		.cpu cortex-m0plus
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"fdcan.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Core/Src/fdcan.c"
+  18              		.section	.text.MX_FDCAN1_Init,"ax",%progbits
+  19              		.align	1
+  20              		.global	MX_FDCAN1_Init
+  21              		.syntax unified
+  22              		.code	16
+  23              		.thumb_func
+  25              	MX_FDCAN1_Init:
+  26              	.LFB496:
+   1:Core/Src/fdcan.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/fdcan.c **** /**
+   3:Core/Src/fdcan.c ****   ******************************************************************************
+   4:Core/Src/fdcan.c ****   * @file    fdcan.c
+   5:Core/Src/fdcan.c ****   * @brief   This file provides code for the configuration
+   6:Core/Src/fdcan.c ****   *          of the FDCAN instances.
+   7:Core/Src/fdcan.c ****   ******************************************************************************
+   8:Core/Src/fdcan.c ****   * @attention
+   9:Core/Src/fdcan.c ****   *
+  10:Core/Src/fdcan.c ****   * Copyright (c) 2025 STMicroelectronics.
+  11:Core/Src/fdcan.c ****   * All rights reserved.
+  12:Core/Src/fdcan.c ****   *
+  13:Core/Src/fdcan.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  14:Core/Src/fdcan.c ****   * in the root directory of this software component.
+  15:Core/Src/fdcan.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  16:Core/Src/fdcan.c ****   *
+  17:Core/Src/fdcan.c ****   ******************************************************************************
+  18:Core/Src/fdcan.c ****   */
+  19:Core/Src/fdcan.c **** /* USER CODE END Header */
+  20:Core/Src/fdcan.c **** /* Includes ------------------------------------------------------------------*/
+  21:Core/Src/fdcan.c **** #include "fdcan.h"
+  22:Core/Src/fdcan.c **** 
+  23:Core/Src/fdcan.c **** /* USER CODE BEGIN 0 */
+  24:Core/Src/fdcan.c **** 
+  25:Core/Src/fdcan.c **** /* USER CODE END 0 */
+  26:Core/Src/fdcan.c **** 
+  27:Core/Src/fdcan.c **** FDCAN_HandleTypeDef hfdcan1;
+  28:Core/Src/fdcan.c **** FDCAN_HandleTypeDef hfdcan2;
+  29:Core/Src/fdcan.c **** 
+  30:Core/Src/fdcan.c **** /* FDCAN1 init function */
+  31:Core/Src/fdcan.c **** void MX_FDCAN1_Init(void)
+  32:Core/Src/fdcan.c **** {
+ARM GAS  /tmp/ccWkPmLZ.s 			page 2
+
+
+  27              		.loc 1 32 1 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31 0000 10B5     		push	{r4, lr}
+  32              	.LCFI0:
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 4, -8
+  35              		.cfi_offset 14, -4
+  33:Core/Src/fdcan.c **** 
+  34:Core/Src/fdcan.c ****   /* USER CODE BEGIN FDCAN1_Init 0 */
+  35:Core/Src/fdcan.c **** 
+  36:Core/Src/fdcan.c ****   /* USER CODE END FDCAN1_Init 0 */
+  37:Core/Src/fdcan.c **** 
+  38:Core/Src/fdcan.c ****   /* USER CODE BEGIN FDCAN1_Init 1 */
+  39:Core/Src/fdcan.c **** 
+  40:Core/Src/fdcan.c ****   /* USER CODE END FDCAN1_Init 1 */
+  41:Core/Src/fdcan.c ****   hfdcan1.Instance = FDCAN1;
+  36              		.loc 1 41 3 view .LVU1
+  37              		.loc 1 41 20 is_stmt 0 view .LVU2
+  38 0002 1048     		ldr	r0, .L4
+  39 0004 104B     		ldr	r3, .L4+4
+  40 0006 0360     		str	r3, [r0]
+  42:Core/Src/fdcan.c ****   hfdcan1.Init.ClockDivider = FDCAN_CLOCK_DIV1;
+  41              		.loc 1 42 3 is_stmt 1 view .LVU3
+  42              		.loc 1 42 29 is_stmt 0 view .LVU4
+  43 0008 0023     		movs	r3, #0
+  44 000a 4360     		str	r3, [r0, #4]
+  43:Core/Src/fdcan.c ****   hfdcan1.Init.FrameFormat = FDCAN_FRAME_CLASSIC;
+  45              		.loc 1 43 3 is_stmt 1 view .LVU5
+  46              		.loc 1 43 28 is_stmt 0 view .LVU6
+  47 000c 8360     		str	r3, [r0, #8]
+  44:Core/Src/fdcan.c ****   hfdcan1.Init.Mode = FDCAN_MODE_NORMAL;
+  48              		.loc 1 44 3 is_stmt 1 view .LVU7
+  49              		.loc 1 44 21 is_stmt 0 view .LVU8
+  50 000e C360     		str	r3, [r0, #12]
+  45:Core/Src/fdcan.c ****   hfdcan1.Init.AutoRetransmission = ENABLE;
+  51              		.loc 1 45 3 is_stmt 1 view .LVU9
+  52              		.loc 1 45 35 is_stmt 0 view .LVU10
+  53 0010 0122     		movs	r2, #1
+  54 0012 0274     		strb	r2, [r0, #16]
+  46:Core/Src/fdcan.c ****   hfdcan1.Init.TransmitPause = ENABLE;
+  55              		.loc 1 46 3 is_stmt 1 view .LVU11
+  56              		.loc 1 46 30 is_stmt 0 view .LVU12
+  57 0014 4274     		strb	r2, [r0, #17]
+  47:Core/Src/fdcan.c ****   hfdcan1.Init.ProtocolException = DISABLE;
+  58              		.loc 1 47 3 is_stmt 1 view .LVU13
+  59              		.loc 1 47 34 is_stmt 0 view .LVU14
+  60 0016 8374     		strb	r3, [r0, #18]
+  48:Core/Src/fdcan.c ****   hfdcan1.Init.NominalPrescaler = 4;
+  61              		.loc 1 48 3 is_stmt 1 view .LVU15
+  62              		.loc 1 48 33 is_stmt 0 view .LVU16
+  63 0018 0421     		movs	r1, #4
+  64 001a 4161     		str	r1, [r0, #20]
+  49:Core/Src/fdcan.c ****   hfdcan1.Init.NominalSyncJumpWidth = 1;
+  65              		.loc 1 49 3 is_stmt 1 view .LVU17
+  66              		.loc 1 49 37 is_stmt 0 view .LVU18
+ARM GAS  /tmp/ccWkPmLZ.s 			page 3
+
+
+  67 001c 8261     		str	r2, [r0, #24]
+  50:Core/Src/fdcan.c ****   hfdcan1.Init.NominalTimeSeg1 = 5;
+  68              		.loc 1 50 3 is_stmt 1 view .LVU19
+  69              		.loc 1 50 32 is_stmt 0 view .LVU20
+  70 001e 0131     		adds	r1, r1, #1
+  71 0020 C161     		str	r1, [r0, #28]
+  51:Core/Src/fdcan.c ****   hfdcan1.Init.NominalTimeSeg2 = 2;
+  72              		.loc 1 51 3 is_stmt 1 view .LVU21
+  73              		.loc 1 51 32 is_stmt 0 view .LVU22
+  74 0022 0339     		subs	r1, r1, #3
+  75 0024 0162     		str	r1, [r0, #32]
+  52:Core/Src/fdcan.c ****   hfdcan1.Init.DataPrescaler = 1;
+  76              		.loc 1 52 3 is_stmt 1 view .LVU23
+  77              		.loc 1 52 30 is_stmt 0 view .LVU24
+  78 0026 4262     		str	r2, [r0, #36]
+  53:Core/Src/fdcan.c ****   hfdcan1.Init.DataSyncJumpWidth = 1;
+  79              		.loc 1 53 3 is_stmt 1 view .LVU25
+  80              		.loc 1 53 34 is_stmt 0 view .LVU26
+  81 0028 8262     		str	r2, [r0, #40]
+  54:Core/Src/fdcan.c ****   hfdcan1.Init.DataTimeSeg1 = 1;
+  82              		.loc 1 54 3 is_stmt 1 view .LVU27
+  83              		.loc 1 54 29 is_stmt 0 view .LVU28
+  84 002a C262     		str	r2, [r0, #44]
+  55:Core/Src/fdcan.c ****   hfdcan1.Init.DataTimeSeg2 = 1;
+  85              		.loc 1 55 3 is_stmt 1 view .LVU29
+  86              		.loc 1 55 29 is_stmt 0 view .LVU30
+  87 002c 0263     		str	r2, [r0, #48]
+  56:Core/Src/fdcan.c ****   hfdcan1.Init.StdFiltersNbr = 0;
+  88              		.loc 1 56 3 is_stmt 1 view .LVU31
+  89              		.loc 1 56 30 is_stmt 0 view .LVU32
+  90 002e 4363     		str	r3, [r0, #52]
+  57:Core/Src/fdcan.c ****   hfdcan1.Init.ExtFiltersNbr = 0;
+  91              		.loc 1 57 3 is_stmt 1 view .LVU33
+  92              		.loc 1 57 30 is_stmt 0 view .LVU34
+  93 0030 8363     		str	r3, [r0, #56]
+  58:Core/Src/fdcan.c ****   hfdcan1.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
+  94              		.loc 1 58 3 is_stmt 1 view .LVU35
+  95              		.loc 1 58 32 is_stmt 0 view .LVU36
+  96 0032 C363     		str	r3, [r0, #60]
+  59:Core/Src/fdcan.c ****   if (HAL_FDCAN_Init(&hfdcan1) != HAL_OK)
+  97              		.loc 1 59 3 is_stmt 1 view .LVU37
+  98              		.loc 1 59 7 is_stmt 0 view .LVU38
+  99 0034 FFF7FEFF 		bl	HAL_FDCAN_Init
+ 100              	.LVL0:
+ 101              		.loc 1 59 6 discriminator 1 view .LVU39
+ 102 0038 0028     		cmp	r0, #0
+ 103 003a 00D1     		bne	.L3
+ 104              	.L1:
+  60:Core/Src/fdcan.c ****   {
+  61:Core/Src/fdcan.c ****     Error_Handler();
+  62:Core/Src/fdcan.c ****   }
+  63:Core/Src/fdcan.c ****   /* USER CODE BEGIN FDCAN1_Init 2 */
+  64:Core/Src/fdcan.c **** 
+  65:Core/Src/fdcan.c ****   /* USER CODE END FDCAN1_Init 2 */
+  66:Core/Src/fdcan.c **** 
+  67:Core/Src/fdcan.c **** }
+ 105              		.loc 1 67 1 view .LVU40
+ARM GAS  /tmp/ccWkPmLZ.s 			page 4
+
+
+ 106              		@ sp needed
+ 107 003c 10BD     		pop	{r4, pc}
+ 108              	.L3:
+  61:Core/Src/fdcan.c ****   }
+ 109              		.loc 1 61 5 is_stmt 1 view .LVU41
+ 110 003e FFF7FEFF 		bl	Error_Handler
+ 111              	.LVL1:
+ 112              		.loc 1 67 1 is_stmt 0 view .LVU42
+ 113 0042 FBE7     		b	.L1
+ 114              	.L5:
+ 115              		.align	2
+ 116              	.L4:
+ 117 0044 00000000 		.word	hfdcan1
+ 118 0048 00640040 		.word	1073767424
+ 119              		.cfi_endproc
+ 120              	.LFE496:
+ 122              		.section	.text.MX_FDCAN2_Init,"ax",%progbits
+ 123              		.align	1
+ 124              		.global	MX_FDCAN2_Init
+ 125              		.syntax unified
+ 126              		.code	16
+ 127              		.thumb_func
+ 129              	MX_FDCAN2_Init:
+ 130              	.LFB497:
+  68:Core/Src/fdcan.c **** /* FDCAN2 init function */
+  69:Core/Src/fdcan.c **** void MX_FDCAN2_Init(void)
+  70:Core/Src/fdcan.c **** {
+ 131              		.loc 1 70 1 is_stmt 1 view -0
+ 132              		.cfi_startproc
+ 133              		@ args = 0, pretend = 0, frame = 0
+ 134              		@ frame_needed = 0, uses_anonymous_args = 0
+ 135 0000 10B5     		push	{r4, lr}
+ 136              	.LCFI1:
+ 137              		.cfi_def_cfa_offset 8
+ 138              		.cfi_offset 4, -8
+ 139              		.cfi_offset 14, -4
+  71:Core/Src/fdcan.c **** 
+  72:Core/Src/fdcan.c ****   /* USER CODE BEGIN FDCAN2_Init 0 */
+  73:Core/Src/fdcan.c **** 
+  74:Core/Src/fdcan.c ****   /* USER CODE END FDCAN2_Init 0 */
+  75:Core/Src/fdcan.c **** 
+  76:Core/Src/fdcan.c ****   /* USER CODE BEGIN FDCAN2_Init 1 */
+  77:Core/Src/fdcan.c **** 
+  78:Core/Src/fdcan.c ****   /* USER CODE END FDCAN2_Init 1 */
+  79:Core/Src/fdcan.c ****   hfdcan2.Instance = FDCAN2;
+ 140              		.loc 1 79 3 view .LVU44
+ 141              		.loc 1 79 20 is_stmt 0 view .LVU45
+ 142 0002 1048     		ldr	r0, .L9
+ 143 0004 104B     		ldr	r3, .L9+4
+ 144 0006 0360     		str	r3, [r0]
+  80:Core/Src/fdcan.c ****   hfdcan2.Init.ClockDivider = FDCAN_CLOCK_DIV1;
+ 145              		.loc 1 80 3 is_stmt 1 view .LVU46
+ 146              		.loc 1 80 29 is_stmt 0 view .LVU47
+ 147 0008 0023     		movs	r3, #0
+ 148 000a 4360     		str	r3, [r0, #4]
+  81:Core/Src/fdcan.c ****   hfdcan2.Init.FrameFormat = FDCAN_FRAME_CLASSIC;
+ 149              		.loc 1 81 3 is_stmt 1 view .LVU48
+ARM GAS  /tmp/ccWkPmLZ.s 			page 5
+
+
+ 150              		.loc 1 81 28 is_stmt 0 view .LVU49
+ 151 000c 8360     		str	r3, [r0, #8]
+  82:Core/Src/fdcan.c ****   hfdcan2.Init.Mode = FDCAN_MODE_NORMAL;
+ 152              		.loc 1 82 3 is_stmt 1 view .LVU50
+ 153              		.loc 1 82 21 is_stmt 0 view .LVU51
+ 154 000e C360     		str	r3, [r0, #12]
+  83:Core/Src/fdcan.c ****   hfdcan2.Init.AutoRetransmission = ENABLE;
+ 155              		.loc 1 83 3 is_stmt 1 view .LVU52
+ 156              		.loc 1 83 35 is_stmt 0 view .LVU53
+ 157 0010 0122     		movs	r2, #1
+ 158 0012 0274     		strb	r2, [r0, #16]
+  84:Core/Src/fdcan.c ****   hfdcan2.Init.TransmitPause = ENABLE;
+ 159              		.loc 1 84 3 is_stmt 1 view .LVU54
+ 160              		.loc 1 84 30 is_stmt 0 view .LVU55
+ 161 0014 4274     		strb	r2, [r0, #17]
+  85:Core/Src/fdcan.c ****   hfdcan2.Init.ProtocolException = DISABLE;
+ 162              		.loc 1 85 3 is_stmt 1 view .LVU56
+ 163              		.loc 1 85 34 is_stmt 0 view .LVU57
+ 164 0016 8374     		strb	r3, [r0, #18]
+  86:Core/Src/fdcan.c ****   hfdcan2.Init.NominalPrescaler = 4;
+ 165              		.loc 1 86 3 is_stmt 1 view .LVU58
+ 166              		.loc 1 86 33 is_stmt 0 view .LVU59
+ 167 0018 0421     		movs	r1, #4
+ 168 001a 4161     		str	r1, [r0, #20]
+  87:Core/Src/fdcan.c ****   hfdcan2.Init.NominalSyncJumpWidth = 1;
+ 169              		.loc 1 87 3 is_stmt 1 view .LVU60
+ 170              		.loc 1 87 37 is_stmt 0 view .LVU61
+ 171 001c 8261     		str	r2, [r0, #24]
+  88:Core/Src/fdcan.c ****   hfdcan2.Init.NominalTimeSeg1 = 5;
+ 172              		.loc 1 88 3 is_stmt 1 view .LVU62
+ 173              		.loc 1 88 32 is_stmt 0 view .LVU63
+ 174 001e 0131     		adds	r1, r1, #1
+ 175 0020 C161     		str	r1, [r0, #28]
+  89:Core/Src/fdcan.c ****   hfdcan2.Init.NominalTimeSeg2 = 2;
+ 176              		.loc 1 89 3 is_stmt 1 view .LVU64
+ 177              		.loc 1 89 32 is_stmt 0 view .LVU65
+ 178 0022 0339     		subs	r1, r1, #3
+ 179 0024 0162     		str	r1, [r0, #32]
+  90:Core/Src/fdcan.c ****   hfdcan2.Init.DataPrescaler = 1;
+ 180              		.loc 1 90 3 is_stmt 1 view .LVU66
+ 181              		.loc 1 90 30 is_stmt 0 view .LVU67
+ 182 0026 4262     		str	r2, [r0, #36]
+  91:Core/Src/fdcan.c ****   hfdcan2.Init.DataSyncJumpWidth = 1;
+ 183              		.loc 1 91 3 is_stmt 1 view .LVU68
+ 184              		.loc 1 91 34 is_stmt 0 view .LVU69
+ 185 0028 8262     		str	r2, [r0, #40]
+  92:Core/Src/fdcan.c ****   hfdcan2.Init.DataTimeSeg1 = 1;
+ 186              		.loc 1 92 3 is_stmt 1 view .LVU70
+ 187              		.loc 1 92 29 is_stmt 0 view .LVU71
+ 188 002a C262     		str	r2, [r0, #44]
+  93:Core/Src/fdcan.c ****   hfdcan2.Init.DataTimeSeg2 = 1;
+ 189              		.loc 1 93 3 is_stmt 1 view .LVU72
+ 190              		.loc 1 93 29 is_stmt 0 view .LVU73
+ 191 002c 0263     		str	r2, [r0, #48]
+  94:Core/Src/fdcan.c ****   hfdcan2.Init.StdFiltersNbr = 0;
+ 192              		.loc 1 94 3 is_stmt 1 view .LVU74
+ 193              		.loc 1 94 30 is_stmt 0 view .LVU75
+ARM GAS  /tmp/ccWkPmLZ.s 			page 6
+
+
+ 194 002e 4363     		str	r3, [r0, #52]
+  95:Core/Src/fdcan.c ****   hfdcan2.Init.ExtFiltersNbr = 0;
+ 195              		.loc 1 95 3 is_stmt 1 view .LVU76
+ 196              		.loc 1 95 30 is_stmt 0 view .LVU77
+ 197 0030 8363     		str	r3, [r0, #56]
+  96:Core/Src/fdcan.c ****   hfdcan2.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
+ 198              		.loc 1 96 3 is_stmt 1 view .LVU78
+ 199              		.loc 1 96 32 is_stmt 0 view .LVU79
+ 200 0032 C363     		str	r3, [r0, #60]
+  97:Core/Src/fdcan.c ****   if (HAL_FDCAN_Init(&hfdcan2) != HAL_OK)
+ 201              		.loc 1 97 3 is_stmt 1 view .LVU80
+ 202              		.loc 1 97 7 is_stmt 0 view .LVU81
+ 203 0034 FFF7FEFF 		bl	HAL_FDCAN_Init
+ 204              	.LVL2:
+ 205              		.loc 1 97 6 discriminator 1 view .LVU82
+ 206 0038 0028     		cmp	r0, #0
+ 207 003a 00D1     		bne	.L8
+ 208              	.L6:
+  98:Core/Src/fdcan.c ****   {
+  99:Core/Src/fdcan.c ****     Error_Handler();
+ 100:Core/Src/fdcan.c ****   }
+ 101:Core/Src/fdcan.c ****   /* USER CODE BEGIN FDCAN2_Init 2 */
+ 102:Core/Src/fdcan.c **** 
+ 103:Core/Src/fdcan.c ****   /* USER CODE END FDCAN2_Init 2 */
+ 104:Core/Src/fdcan.c **** 
+ 105:Core/Src/fdcan.c **** }
+ 209              		.loc 1 105 1 view .LVU83
+ 210              		@ sp needed
+ 211 003c 10BD     		pop	{r4, pc}
+ 212              	.L8:
+  99:Core/Src/fdcan.c ****   }
+ 213              		.loc 1 99 5 is_stmt 1 view .LVU84
+ 214 003e FFF7FEFF 		bl	Error_Handler
+ 215              	.LVL3:
+ 216              		.loc 1 105 1 is_stmt 0 view .LVU85
+ 217 0042 FBE7     		b	.L6
+ 218              	.L10:
+ 219              		.align	2
+ 220              	.L9:
+ 221 0044 00000000 		.word	hfdcan2
+ 222 0048 00680040 		.word	1073768448
+ 223              		.cfi_endproc
+ 224              	.LFE497:
+ 226              		.section	.text.HAL_FDCAN_MspInit,"ax",%progbits
+ 227              		.align	1
+ 228              		.global	HAL_FDCAN_MspInit
+ 229              		.syntax unified
+ 230              		.code	16
+ 231              		.thumb_func
+ 233              	HAL_FDCAN_MspInit:
+ 234              	.LVL4:
+ 235              	.LFB498:
+ 106:Core/Src/fdcan.c **** 
+ 107:Core/Src/fdcan.c **** static uint32_t HAL_RCC_FDCAN_CLK_ENABLED=0;
+ 108:Core/Src/fdcan.c **** 
+ 109:Core/Src/fdcan.c **** void HAL_FDCAN_MspInit(FDCAN_HandleTypeDef* fdcanHandle)
+ 110:Core/Src/fdcan.c **** {
+ARM GAS  /tmp/ccWkPmLZ.s 			page 7
+
+
+ 236              		.loc 1 110 1 is_stmt 1 view -0
+ 237              		.cfi_startproc
+ 238              		@ args = 0, pretend = 0, frame = 112
+ 239              		@ frame_needed = 0, uses_anonymous_args = 0
+ 240              		.loc 1 110 1 is_stmt 0 view .LVU87
+ 241 0000 10B5     		push	{r4, lr}
+ 242              	.LCFI2:
+ 243              		.cfi_def_cfa_offset 8
+ 244              		.cfi_offset 4, -8
+ 245              		.cfi_offset 14, -4
+ 246 0002 9CB0     		sub	sp, sp, #112
+ 247              	.LCFI3:
+ 248              		.cfi_def_cfa_offset 120
+ 249 0004 0400     		movs	r4, r0
+ 111:Core/Src/fdcan.c **** 
+ 112:Core/Src/fdcan.c ****   GPIO_InitTypeDef GPIO_InitStruct = {0};
+ 250              		.loc 1 112 3 is_stmt 1 view .LVU88
+ 251              		.loc 1 112 20 is_stmt 0 view .LVU89
+ 252 0006 1422     		movs	r2, #20
+ 253 0008 0021     		movs	r1, #0
+ 254 000a 17A8     		add	r0, sp, #92
+ 255              	.LVL5:
+ 256              		.loc 1 112 20 view .LVU90
+ 257 000c FFF7FEFF 		bl	memset
+ 258              	.LVL6:
+ 113:Core/Src/fdcan.c ****   RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+ 259              		.loc 1 113 3 is_stmt 1 view .LVU91
+ 260              		.loc 1 113 28 is_stmt 0 view .LVU92
+ 261 0010 4C22     		movs	r2, #76
+ 262 0012 0021     		movs	r1, #0
+ 263 0014 04A8     		add	r0, sp, #16
+ 264 0016 FFF7FEFF 		bl	memset
+ 265              	.LVL7:
+ 114:Core/Src/fdcan.c ****   if(fdcanHandle->Instance==FDCAN1)
+ 266              		.loc 1 114 3 is_stmt 1 view .LVU93
+ 267              		.loc 1 114 17 is_stmt 0 view .LVU94
+ 268 001a 2368     		ldr	r3, [r4]
+ 269              		.loc 1 114 5 view .LVU95
+ 270 001c 3D4A     		ldr	r2, .L24
+ 271 001e 9342     		cmp	r3, r2
+ 272 0020 04D0     		beq	.L18
+ 115:Core/Src/fdcan.c ****   {
+ 116:Core/Src/fdcan.c ****   /* USER CODE BEGIN FDCAN1_MspInit 0 */
+ 117:Core/Src/fdcan.c **** 
+ 118:Core/Src/fdcan.c ****   /* USER CODE END FDCAN1_MspInit 0 */
+ 119:Core/Src/fdcan.c **** 
+ 120:Core/Src/fdcan.c ****   /** Initializes the peripherals clocks
+ 121:Core/Src/fdcan.c ****   */
+ 122:Core/Src/fdcan.c ****     PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_FDCAN;
+ 123:Core/Src/fdcan.c ****     PeriphClkInit.FdcanClockSelection = RCC_FDCANCLKSOURCE_PCLK1;
+ 124:Core/Src/fdcan.c **** 
+ 125:Core/Src/fdcan.c ****     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+ 126:Core/Src/fdcan.c ****     {
+ 127:Core/Src/fdcan.c ****       Error_Handler();
+ 128:Core/Src/fdcan.c ****     }
+ 129:Core/Src/fdcan.c **** 
+ 130:Core/Src/fdcan.c ****     /* FDCAN1 clock enable */
+ARM GAS  /tmp/ccWkPmLZ.s 			page 8
+
+
+ 131:Core/Src/fdcan.c ****     HAL_RCC_FDCAN_CLK_ENABLED++;
+ 132:Core/Src/fdcan.c ****     if(HAL_RCC_FDCAN_CLK_ENABLED==1){
+ 133:Core/Src/fdcan.c ****       __HAL_RCC_FDCAN_CLK_ENABLE();
+ 134:Core/Src/fdcan.c ****     }
+ 135:Core/Src/fdcan.c **** 
+ 136:Core/Src/fdcan.c ****     __HAL_RCC_GPIOD_CLK_ENABLE();
+ 137:Core/Src/fdcan.c ****     /**FDCAN1 GPIO Configuration
+ 138:Core/Src/fdcan.c ****     PD0     ------> FDCAN1_RX
+ 139:Core/Src/fdcan.c ****     PD1     ------> FDCAN1_TX
+ 140:Core/Src/fdcan.c ****     */
+ 141:Core/Src/fdcan.c ****     GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
+ 142:Core/Src/fdcan.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 143:Core/Src/fdcan.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 144:Core/Src/fdcan.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+ 145:Core/Src/fdcan.c ****     GPIO_InitStruct.Alternate = GPIO_AF3_FDCAN1;
+ 146:Core/Src/fdcan.c ****     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+ 147:Core/Src/fdcan.c **** 
+ 148:Core/Src/fdcan.c ****     /* FDCAN1 interrupt Init */
+ 149:Core/Src/fdcan.c ****     HAL_NVIC_SetPriority(TIM16_FDCAN_IT0_IRQn, 0, 0);
+ 150:Core/Src/fdcan.c ****     HAL_NVIC_EnableIRQ(TIM16_FDCAN_IT0_IRQn);
+ 151:Core/Src/fdcan.c ****   /* USER CODE BEGIN FDCAN1_MspInit 1 */
+ 152:Core/Src/fdcan.c **** 
+ 153:Core/Src/fdcan.c ****   /* USER CODE END FDCAN1_MspInit 1 */
+ 154:Core/Src/fdcan.c ****   }
+ 155:Core/Src/fdcan.c ****   else if(fdcanHandle->Instance==FDCAN2)
+ 273              		.loc 1 155 8 is_stmt 1 view .LVU96
+ 274              		.loc 1 155 10 is_stmt 0 view .LVU97
+ 275 0022 3D4A     		ldr	r2, .L24+4
+ 276 0024 9342     		cmp	r3, r2
+ 277 0026 3BD0     		beq	.L19
+ 278              	.L11:
+ 156:Core/Src/fdcan.c ****   {
+ 157:Core/Src/fdcan.c ****   /* USER CODE BEGIN FDCAN2_MspInit 0 */
+ 158:Core/Src/fdcan.c **** 
+ 159:Core/Src/fdcan.c ****   /* USER CODE END FDCAN2_MspInit 0 */
+ 160:Core/Src/fdcan.c **** 
+ 161:Core/Src/fdcan.c ****   /** Initializes the peripherals clocks
+ 162:Core/Src/fdcan.c ****   */
+ 163:Core/Src/fdcan.c ****     PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_FDCAN;
+ 164:Core/Src/fdcan.c ****     PeriphClkInit.FdcanClockSelection = RCC_FDCANCLKSOURCE_PCLK1;
+ 165:Core/Src/fdcan.c **** 
+ 166:Core/Src/fdcan.c ****     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+ 167:Core/Src/fdcan.c ****     {
+ 168:Core/Src/fdcan.c ****       Error_Handler();
+ 169:Core/Src/fdcan.c ****     }
+ 170:Core/Src/fdcan.c **** 
+ 171:Core/Src/fdcan.c ****     /* FDCAN2 clock enable */
+ 172:Core/Src/fdcan.c ****     HAL_RCC_FDCAN_CLK_ENABLED++;
+ 173:Core/Src/fdcan.c ****     if(HAL_RCC_FDCAN_CLK_ENABLED==1){
+ 174:Core/Src/fdcan.c ****       __HAL_RCC_FDCAN_CLK_ENABLE();
+ 175:Core/Src/fdcan.c ****     }
+ 176:Core/Src/fdcan.c **** 
+ 177:Core/Src/fdcan.c ****     __HAL_RCC_GPIOB_CLK_ENABLE();
+ 178:Core/Src/fdcan.c ****     /**FDCAN2 GPIO Configuration
+ 179:Core/Src/fdcan.c ****     PB0     ------> FDCAN2_RX
+ 180:Core/Src/fdcan.c ****     PB1     ------> FDCAN2_TX
+ 181:Core/Src/fdcan.c ****     */
+ARM GAS  /tmp/ccWkPmLZ.s 			page 9
+
+
+ 182:Core/Src/fdcan.c ****     GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1;
+ 183:Core/Src/fdcan.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 184:Core/Src/fdcan.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 185:Core/Src/fdcan.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+ 186:Core/Src/fdcan.c ****     GPIO_InitStruct.Alternate = GPIO_AF3_FDCAN2;
+ 187:Core/Src/fdcan.c ****     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 188:Core/Src/fdcan.c **** 
+ 189:Core/Src/fdcan.c ****     /* FDCAN2 interrupt Init */
+ 190:Core/Src/fdcan.c ****     HAL_NVIC_SetPriority(TIM16_FDCAN_IT0_IRQn, 0, 0);
+ 191:Core/Src/fdcan.c ****     HAL_NVIC_EnableIRQ(TIM16_FDCAN_IT0_IRQn);
+ 192:Core/Src/fdcan.c ****   /* USER CODE BEGIN FDCAN2_MspInit 1 */
+ 193:Core/Src/fdcan.c **** 
+ 194:Core/Src/fdcan.c ****   /* USER CODE END FDCAN2_MspInit 1 */
+ 195:Core/Src/fdcan.c ****   }
+ 196:Core/Src/fdcan.c **** }
+ 279              		.loc 1 196 1 view .LVU98
+ 280 0028 1CB0     		add	sp, sp, #112
+ 281              		@ sp needed
+ 282              	.LVL8:
+ 283              		.loc 1 196 1 view .LVU99
+ 284 002a 10BD     		pop	{r4, pc}
+ 285              	.LVL9:
+ 286              	.L18:
+ 122:Core/Src/fdcan.c ****     PeriphClkInit.FdcanClockSelection = RCC_FDCANCLKSOURCE_PCLK1;
+ 287              		.loc 1 122 5 is_stmt 1 view .LVU100
+ 122:Core/Src/fdcan.c ****     PeriphClkInit.FdcanClockSelection = RCC_FDCANCLKSOURCE_PCLK1;
+ 288              		.loc 1 122 40 is_stmt 0 view .LVU101
+ 289 002c 8023     		movs	r3, #128
+ 290 002e 9B04     		lsls	r3, r3, #18
+ 291 0030 0493     		str	r3, [sp, #16]
+ 123:Core/Src/fdcan.c **** 
+ 292              		.loc 1 123 5 is_stmt 1 view .LVU102
+ 125:Core/Src/fdcan.c ****     {
+ 293              		.loc 1 125 5 view .LVU103
+ 125:Core/Src/fdcan.c ****     {
+ 294              		.loc 1 125 9 is_stmt 0 view .LVU104
+ 295 0032 04A8     		add	r0, sp, #16
+ 296 0034 FFF7FEFF 		bl	HAL_RCCEx_PeriphCLKConfig
+ 297              	.LVL10:
+ 125:Core/Src/fdcan.c ****     {
+ 298              		.loc 1 125 8 discriminator 1 view .LVU105
+ 299 0038 0028     		cmp	r0, #0
+ 300 003a 23D1     		bne	.L20
+ 301              	.L13:
+ 131:Core/Src/fdcan.c ****     if(HAL_RCC_FDCAN_CLK_ENABLED==1){
+ 302              		.loc 1 131 5 is_stmt 1 view .LVU106
+ 131:Core/Src/fdcan.c ****     if(HAL_RCC_FDCAN_CLK_ENABLED==1){
+ 303              		.loc 1 131 30 is_stmt 0 view .LVU107
+ 304 003c 374A     		ldr	r2, .L24+8
+ 305 003e 1368     		ldr	r3, [r2]
+ 306 0040 0133     		adds	r3, r3, #1
+ 307 0042 1360     		str	r3, [r2]
+ 132:Core/Src/fdcan.c ****       __HAL_RCC_FDCAN_CLK_ENABLE();
+ 308              		.loc 1 132 5 is_stmt 1 view .LVU108
+ 132:Core/Src/fdcan.c ****       __HAL_RCC_FDCAN_CLK_ENABLE();
+ 309              		.loc 1 132 7 is_stmt 0 view .LVU109
+ 310 0044 012B     		cmp	r3, #1
+ARM GAS  /tmp/ccWkPmLZ.s 			page 10
+
+
+ 311 0046 20D0     		beq	.L21
+ 312              	.L14:
+ 133:Core/Src/fdcan.c ****     }
+ 313              		.loc 1 133 7 is_stmt 1 discriminator 1 view .LVU110
+ 136:Core/Src/fdcan.c ****     /**FDCAN1 GPIO Configuration
+ 314              		.loc 1 136 5 view .LVU111
+ 315              	.LBB2:
+ 136:Core/Src/fdcan.c ****     /**FDCAN1 GPIO Configuration
+ 316              		.loc 1 136 5 view .LVU112
+ 136:Core/Src/fdcan.c ****     /**FDCAN1 GPIO Configuration
+ 317              		.loc 1 136 5 view .LVU113
+ 318 0048 354A     		ldr	r2, .L24+12
+ 319 004a 516B     		ldr	r1, [r2, #52]
+ 320 004c 0823     		movs	r3, #8
+ 321 004e 1943     		orrs	r1, r3
+ 322 0050 5163     		str	r1, [r2, #52]
+ 136:Core/Src/fdcan.c ****     /**FDCAN1 GPIO Configuration
+ 323              		.loc 1 136 5 view .LVU114
+ 324 0052 526B     		ldr	r2, [r2, #52]
+ 325 0054 1340     		ands	r3, r2
+ 326 0056 0193     		str	r3, [sp, #4]
+ 136:Core/Src/fdcan.c ****     /**FDCAN1 GPIO Configuration
+ 327              		.loc 1 136 5 view .LVU115
+ 328 0058 019B     		ldr	r3, [sp, #4]
+ 329              	.LBE2:
+ 136:Core/Src/fdcan.c ****     /**FDCAN1 GPIO Configuration
+ 330              		.loc 1 136 5 view .LVU116
+ 141:Core/Src/fdcan.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 331              		.loc 1 141 5 view .LVU117
+ 141:Core/Src/fdcan.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 332              		.loc 1 141 25 is_stmt 0 view .LVU118
+ 333 005a 17A9     		add	r1, sp, #92
+ 334 005c 0323     		movs	r3, #3
+ 335 005e 1793     		str	r3, [sp, #92]
+ 142:Core/Src/fdcan.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 336              		.loc 1 142 5 is_stmt 1 view .LVU119
+ 142:Core/Src/fdcan.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 337              		.loc 1 142 26 is_stmt 0 view .LVU120
+ 338 0060 0222     		movs	r2, #2
+ 339 0062 4A60     		str	r2, [r1, #4]
+ 143:Core/Src/fdcan.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+ 340              		.loc 1 143 5 is_stmt 1 view .LVU121
+ 143:Core/Src/fdcan.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+ 341              		.loc 1 143 26 is_stmt 0 view .LVU122
+ 342 0064 0022     		movs	r2, #0
+ 343 0066 8A60     		str	r2, [r1, #8]
+ 144:Core/Src/fdcan.c ****     GPIO_InitStruct.Alternate = GPIO_AF3_FDCAN1;
+ 344              		.loc 1 144 5 is_stmt 1 view .LVU123
+ 144:Core/Src/fdcan.c ****     GPIO_InitStruct.Alternate = GPIO_AF3_FDCAN1;
+ 345              		.loc 1 144 27 is_stmt 0 view .LVU124
+ 346 0068 CA60     		str	r2, [r1, #12]
+ 145:Core/Src/fdcan.c ****     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+ 347              		.loc 1 145 5 is_stmt 1 view .LVU125
+ 145:Core/Src/fdcan.c ****     HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+ 348              		.loc 1 145 31 is_stmt 0 view .LVU126
+ 349 006a 0B61     		str	r3, [r1, #16]
+ 146:Core/Src/fdcan.c **** 
+ARM GAS  /tmp/ccWkPmLZ.s 			page 11
+
+
+ 350              		.loc 1 146 5 is_stmt 1 view .LVU127
+ 351 006c 2D48     		ldr	r0, .L24+16
+ 352 006e FFF7FEFF 		bl	HAL_GPIO_Init
+ 353              	.LVL11:
+ 149:Core/Src/fdcan.c ****     HAL_NVIC_EnableIRQ(TIM16_FDCAN_IT0_IRQn);
+ 354              		.loc 1 149 5 view .LVU128
+ 355 0072 0022     		movs	r2, #0
+ 356 0074 0021     		movs	r1, #0
+ 357 0076 1520     		movs	r0, #21
+ 358 0078 FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 359              	.LVL12:
+ 150:Core/Src/fdcan.c ****   /* USER CODE BEGIN FDCAN1_MspInit 1 */
+ 360              		.loc 1 150 5 view .LVU129
+ 361 007c 1520     		movs	r0, #21
+ 362 007e FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
+ 363              	.LVL13:
+ 364 0082 D1E7     		b	.L11
+ 365              	.L20:
+ 127:Core/Src/fdcan.c ****     }
+ 366              		.loc 1 127 7 view .LVU130
+ 367 0084 FFF7FEFF 		bl	Error_Handler
+ 368              	.LVL14:
+ 369 0088 D8E7     		b	.L13
+ 370              	.L21:
+ 133:Core/Src/fdcan.c ****     }
+ 371              		.loc 1 133 7 view .LVU131
+ 372              	.LBB3:
+ 133:Core/Src/fdcan.c ****     }
+ 373              		.loc 1 133 7 view .LVU132
+ 133:Core/Src/fdcan.c ****     }
+ 374              		.loc 1 133 7 view .LVU133
+ 375 008a 254B     		ldr	r3, .L24+12
+ 376 008c DA6B     		ldr	r2, [r3, #60]
+ 377 008e 8021     		movs	r1, #128
+ 378 0090 4901     		lsls	r1, r1, #5
+ 379 0092 0A43     		orrs	r2, r1
+ 380 0094 DA63     		str	r2, [r3, #60]
+ 133:Core/Src/fdcan.c ****     }
+ 381              		.loc 1 133 7 view .LVU134
+ 382 0096 DB6B     		ldr	r3, [r3, #60]
+ 383 0098 0B40     		ands	r3, r1
+ 384 009a 0093     		str	r3, [sp]
+ 133:Core/Src/fdcan.c ****     }
+ 385              		.loc 1 133 7 view .LVU135
+ 386 009c 009B     		ldr	r3, [sp]
+ 387 009e D3E7     		b	.L14
+ 388              	.L19:
+ 389              	.LBE3:
+ 163:Core/Src/fdcan.c ****     PeriphClkInit.FdcanClockSelection = RCC_FDCANCLKSOURCE_PCLK1;
+ 390              		.loc 1 163 5 view .LVU136
+ 163:Core/Src/fdcan.c ****     PeriphClkInit.FdcanClockSelection = RCC_FDCANCLKSOURCE_PCLK1;
+ 391              		.loc 1 163 40 is_stmt 0 view .LVU137
+ 392 00a0 8023     		movs	r3, #128
+ 393 00a2 9B04     		lsls	r3, r3, #18
+ 394 00a4 0493     		str	r3, [sp, #16]
+ 164:Core/Src/fdcan.c **** 
+ 395              		.loc 1 164 5 is_stmt 1 view .LVU138
+ARM GAS  /tmp/ccWkPmLZ.s 			page 12
+
+
+ 166:Core/Src/fdcan.c ****     {
+ 396              		.loc 1 166 5 view .LVU139
+ 166:Core/Src/fdcan.c ****     {
+ 397              		.loc 1 166 9 is_stmt 0 view .LVU140
+ 398 00a6 04A8     		add	r0, sp, #16
+ 399 00a8 FFF7FEFF 		bl	HAL_RCCEx_PeriphCLKConfig
+ 400              	.LVL15:
+ 166:Core/Src/fdcan.c ****     {
+ 401              		.loc 1 166 8 discriminator 1 view .LVU141
+ 402 00ac 0028     		cmp	r0, #0
+ 403 00ae 22D1     		bne	.L22
+ 404              	.L16:
+ 172:Core/Src/fdcan.c ****     if(HAL_RCC_FDCAN_CLK_ENABLED==1){
+ 405              		.loc 1 172 5 is_stmt 1 view .LVU142
+ 172:Core/Src/fdcan.c ****     if(HAL_RCC_FDCAN_CLK_ENABLED==1){
+ 406              		.loc 1 172 30 is_stmt 0 view .LVU143
+ 407 00b0 1A4A     		ldr	r2, .L24+8
+ 408 00b2 1368     		ldr	r3, [r2]
+ 409 00b4 0133     		adds	r3, r3, #1
+ 410 00b6 1360     		str	r3, [r2]
+ 173:Core/Src/fdcan.c ****       __HAL_RCC_FDCAN_CLK_ENABLE();
+ 411              		.loc 1 173 5 is_stmt 1 view .LVU144
+ 173:Core/Src/fdcan.c ****       __HAL_RCC_FDCAN_CLK_ENABLE();
+ 412              		.loc 1 173 7 is_stmt 0 view .LVU145
+ 413 00b8 012B     		cmp	r3, #1
+ 414 00ba 1FD0     		beq	.L23
+ 415              	.L17:
+ 174:Core/Src/fdcan.c ****     }
+ 416              		.loc 1 174 7 is_stmt 1 discriminator 1 view .LVU146
+ 177:Core/Src/fdcan.c ****     /**FDCAN2 GPIO Configuration
+ 417              		.loc 1 177 5 view .LVU147
+ 418              	.LBB4:
+ 177:Core/Src/fdcan.c ****     /**FDCAN2 GPIO Configuration
+ 419              		.loc 1 177 5 view .LVU148
+ 177:Core/Src/fdcan.c ****     /**FDCAN2 GPIO Configuration
+ 420              		.loc 1 177 5 view .LVU149
+ 421 00bc 184A     		ldr	r2, .L24+12
+ 422 00be 516B     		ldr	r1, [r2, #52]
+ 423 00c0 0223     		movs	r3, #2
+ 424 00c2 1943     		orrs	r1, r3
+ 425 00c4 5163     		str	r1, [r2, #52]
+ 177:Core/Src/fdcan.c ****     /**FDCAN2 GPIO Configuration
+ 426              		.loc 1 177 5 view .LVU150
+ 427 00c6 526B     		ldr	r2, [r2, #52]
+ 428 00c8 1A40     		ands	r2, r3
+ 429 00ca 0392     		str	r2, [sp, #12]
+ 177:Core/Src/fdcan.c ****     /**FDCAN2 GPIO Configuration
+ 430              		.loc 1 177 5 view .LVU151
+ 431 00cc 039A     		ldr	r2, [sp, #12]
+ 432              	.LBE4:
+ 177:Core/Src/fdcan.c ****     /**FDCAN2 GPIO Configuration
+ 433              		.loc 1 177 5 view .LVU152
+ 182:Core/Src/fdcan.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 434              		.loc 1 182 5 view .LVU153
+ 182:Core/Src/fdcan.c ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 435              		.loc 1 182 25 is_stmt 0 view .LVU154
+ 436 00ce 17A9     		add	r1, sp, #92
+ARM GAS  /tmp/ccWkPmLZ.s 			page 13
+
+
+ 437 00d0 0322     		movs	r2, #3
+ 438 00d2 1792     		str	r2, [sp, #92]
+ 183:Core/Src/fdcan.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 439              		.loc 1 183 5 is_stmt 1 view .LVU155
+ 183:Core/Src/fdcan.c ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 440              		.loc 1 183 26 is_stmt 0 view .LVU156
+ 441 00d4 4B60     		str	r3, [r1, #4]
+ 184:Core/Src/fdcan.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+ 442              		.loc 1 184 5 is_stmt 1 view .LVU157
+ 184:Core/Src/fdcan.c ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+ 443              		.loc 1 184 26 is_stmt 0 view .LVU158
+ 444 00d6 0023     		movs	r3, #0
+ 445 00d8 8B60     		str	r3, [r1, #8]
+ 185:Core/Src/fdcan.c ****     GPIO_InitStruct.Alternate = GPIO_AF3_FDCAN2;
+ 446              		.loc 1 185 5 is_stmt 1 view .LVU159
+ 185:Core/Src/fdcan.c ****     GPIO_InitStruct.Alternate = GPIO_AF3_FDCAN2;
+ 447              		.loc 1 185 27 is_stmt 0 view .LVU160
+ 448 00da CB60     		str	r3, [r1, #12]
+ 186:Core/Src/fdcan.c ****     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 449              		.loc 1 186 5 is_stmt 1 view .LVU161
+ 186:Core/Src/fdcan.c ****     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 450              		.loc 1 186 31 is_stmt 0 view .LVU162
+ 451 00dc 0A61     		str	r2, [r1, #16]
+ 187:Core/Src/fdcan.c **** 
+ 452              		.loc 1 187 5 is_stmt 1 view .LVU163
+ 453 00de 1248     		ldr	r0, .L24+20
+ 454 00e0 FFF7FEFF 		bl	HAL_GPIO_Init
+ 455              	.LVL16:
+ 190:Core/Src/fdcan.c ****     HAL_NVIC_EnableIRQ(TIM16_FDCAN_IT0_IRQn);
+ 456              		.loc 1 190 5 view .LVU164
+ 457 00e4 0022     		movs	r2, #0
+ 458 00e6 0021     		movs	r1, #0
+ 459 00e8 1520     		movs	r0, #21
+ 460 00ea FFF7FEFF 		bl	HAL_NVIC_SetPriority
+ 461              	.LVL17:
+ 191:Core/Src/fdcan.c ****   /* USER CODE BEGIN FDCAN2_MspInit 1 */
+ 462              		.loc 1 191 5 view .LVU165
+ 463 00ee 1520     		movs	r0, #21
+ 464 00f0 FFF7FEFF 		bl	HAL_NVIC_EnableIRQ
+ 465              	.LVL18:
+ 466              		.loc 1 196 1 is_stmt 0 view .LVU166
+ 467 00f4 98E7     		b	.L11
+ 468              	.L22:
+ 168:Core/Src/fdcan.c ****     }
+ 469              		.loc 1 168 7 is_stmt 1 view .LVU167
+ 470 00f6 FFF7FEFF 		bl	Error_Handler
+ 471              	.LVL19:
+ 472 00fa D9E7     		b	.L16
+ 473              	.L23:
+ 174:Core/Src/fdcan.c ****     }
+ 474              		.loc 1 174 7 view .LVU168
+ 475              	.LBB5:
+ 174:Core/Src/fdcan.c ****     }
+ 476              		.loc 1 174 7 view .LVU169
+ 174:Core/Src/fdcan.c ****     }
+ 477              		.loc 1 174 7 view .LVU170
+ 478 00fc 084B     		ldr	r3, .L24+12
+ARM GAS  /tmp/ccWkPmLZ.s 			page 14
+
+
+ 479 00fe DA6B     		ldr	r2, [r3, #60]
+ 480 0100 8021     		movs	r1, #128
+ 481 0102 4901     		lsls	r1, r1, #5
+ 482 0104 0A43     		orrs	r2, r1
+ 483 0106 DA63     		str	r2, [r3, #60]
+ 174:Core/Src/fdcan.c ****     }
+ 484              		.loc 1 174 7 view .LVU171
+ 485 0108 DB6B     		ldr	r3, [r3, #60]
+ 486 010a 0B40     		ands	r3, r1
+ 487 010c 0293     		str	r3, [sp, #8]
+ 174:Core/Src/fdcan.c ****     }
+ 488              		.loc 1 174 7 view .LVU172
+ 489 010e 029B     		ldr	r3, [sp, #8]
+ 490 0110 D4E7     		b	.L17
+ 491              	.L25:
+ 492 0112 C046     		.align	2
+ 493              	.L24:
+ 494 0114 00640040 		.word	1073767424
+ 495 0118 00680040 		.word	1073768448
+ 496 011c 00000000 		.word	HAL_RCC_FDCAN_CLK_ENABLED
+ 497 0120 00100240 		.word	1073876992
+ 498 0124 000C0050 		.word	1342180352
+ 499 0128 00040050 		.word	1342178304
+ 500              	.LBE5:
+ 501              		.cfi_endproc
+ 502              	.LFE498:
+ 504              		.section	.text.HAL_FDCAN_MspDeInit,"ax",%progbits
+ 505              		.align	1
+ 506              		.global	HAL_FDCAN_MspDeInit
+ 507              		.syntax unified
+ 508              		.code	16
+ 509              		.thumb_func
+ 511              	HAL_FDCAN_MspDeInit:
+ 512              	.LVL20:
+ 513              	.LFB499:
+ 197:Core/Src/fdcan.c **** 
+ 198:Core/Src/fdcan.c **** void HAL_FDCAN_MspDeInit(FDCAN_HandleTypeDef* fdcanHandle)
+ 199:Core/Src/fdcan.c **** {
+ 514              		.loc 1 199 1 view -0
+ 515              		.cfi_startproc
+ 516              		@ args = 0, pretend = 0, frame = 0
+ 517              		@ frame_needed = 0, uses_anonymous_args = 0
+ 518              		.loc 1 199 1 is_stmt 0 view .LVU174
+ 519 0000 10B5     		push	{r4, lr}
+ 520              	.LCFI4:
+ 521              		.cfi_def_cfa_offset 8
+ 522              		.cfi_offset 4, -8
+ 523              		.cfi_offset 14, -4
+ 200:Core/Src/fdcan.c **** 
+ 201:Core/Src/fdcan.c ****   if(fdcanHandle->Instance==FDCAN1)
+ 524              		.loc 1 201 3 is_stmt 1 view .LVU175
+ 525              		.loc 1 201 17 is_stmt 0 view .LVU176
+ 526 0002 0368     		ldr	r3, [r0]
+ 527              		.loc 1 201 5 view .LVU177
+ 528 0004 134A     		ldr	r2, .L33
+ 529 0006 9342     		cmp	r3, r2
+ 530 0008 03D0     		beq	.L31
+ARM GAS  /tmp/ccWkPmLZ.s 			page 15
+
+
+ 202:Core/Src/fdcan.c ****   {
+ 203:Core/Src/fdcan.c ****   /* USER CODE BEGIN FDCAN1_MspDeInit 0 */
+ 204:Core/Src/fdcan.c **** 
+ 205:Core/Src/fdcan.c ****   /* USER CODE END FDCAN1_MspDeInit 0 */
+ 206:Core/Src/fdcan.c ****     /* Peripheral clock disable */
+ 207:Core/Src/fdcan.c ****     HAL_RCC_FDCAN_CLK_ENABLED--;
+ 208:Core/Src/fdcan.c ****     if(HAL_RCC_FDCAN_CLK_ENABLED==0){
+ 209:Core/Src/fdcan.c ****       __HAL_RCC_FDCAN_CLK_DISABLE();
+ 210:Core/Src/fdcan.c ****     }
+ 211:Core/Src/fdcan.c **** 
+ 212:Core/Src/fdcan.c ****     /**FDCAN1 GPIO Configuration
+ 213:Core/Src/fdcan.c ****     PD0     ------> FDCAN1_RX
+ 214:Core/Src/fdcan.c ****     PD1     ------> FDCAN1_TX
+ 215:Core/Src/fdcan.c ****     */
+ 216:Core/Src/fdcan.c ****     HAL_GPIO_DeInit(GPIOD, GPIO_PIN_0|GPIO_PIN_1);
+ 217:Core/Src/fdcan.c **** 
+ 218:Core/Src/fdcan.c ****     /* FDCAN1 interrupt Deinit */
+ 219:Core/Src/fdcan.c ****   /* USER CODE BEGIN FDCAN1:TIM16_FDCAN_IT0_IRQn disable */
+ 220:Core/Src/fdcan.c ****     /**
+ 221:Core/Src/fdcan.c ****     * Uncomment the line below to disable the "TIM16_FDCAN_IT0_IRQn" interrupt
+ 222:Core/Src/fdcan.c ****     * Be aware, disabling shared interrupt may affect other IPs
+ 223:Core/Src/fdcan.c ****     */
+ 224:Core/Src/fdcan.c ****     /* HAL_NVIC_DisableIRQ(TIM16_FDCAN_IT0_IRQn); */
+ 225:Core/Src/fdcan.c ****   /* USER CODE END FDCAN1:TIM16_FDCAN_IT0_IRQn disable */
+ 226:Core/Src/fdcan.c **** 
+ 227:Core/Src/fdcan.c ****   /* USER CODE BEGIN FDCAN1_MspDeInit 1 */
+ 228:Core/Src/fdcan.c **** 
+ 229:Core/Src/fdcan.c ****   /* USER CODE END FDCAN1_MspDeInit 1 */
+ 230:Core/Src/fdcan.c ****   }
+ 231:Core/Src/fdcan.c ****   else if(fdcanHandle->Instance==FDCAN2)
+ 531              		.loc 1 231 8 is_stmt 1 view .LVU178
+ 532              		.loc 1 231 10 is_stmt 0 view .LVU179
+ 533 000a 134A     		ldr	r2, .L33+4
+ 534 000c 9342     		cmp	r3, r2
+ 535 000e 10D0     		beq	.L32
+ 536              	.LVL21:
+ 537              	.L26:
+ 232:Core/Src/fdcan.c ****   {
+ 233:Core/Src/fdcan.c ****   /* USER CODE BEGIN FDCAN2_MspDeInit 0 */
+ 234:Core/Src/fdcan.c **** 
+ 235:Core/Src/fdcan.c ****   /* USER CODE END FDCAN2_MspDeInit 0 */
+ 236:Core/Src/fdcan.c ****     /* Peripheral clock disable */
+ 237:Core/Src/fdcan.c ****     HAL_RCC_FDCAN_CLK_ENABLED--;
+ 238:Core/Src/fdcan.c ****     if(HAL_RCC_FDCAN_CLK_ENABLED==0){
+ 239:Core/Src/fdcan.c ****       __HAL_RCC_FDCAN_CLK_DISABLE();
+ 240:Core/Src/fdcan.c ****     }
+ 241:Core/Src/fdcan.c **** 
+ 242:Core/Src/fdcan.c ****     /**FDCAN2 GPIO Configuration
+ 243:Core/Src/fdcan.c ****     PB0     ------> FDCAN2_RX
+ 244:Core/Src/fdcan.c ****     PB1     ------> FDCAN2_TX
+ 245:Core/Src/fdcan.c ****     */
+ 246:Core/Src/fdcan.c ****     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_0|GPIO_PIN_1);
+ 247:Core/Src/fdcan.c **** 
+ 248:Core/Src/fdcan.c ****     /* FDCAN2 interrupt Deinit */
+ 249:Core/Src/fdcan.c ****   /* USER CODE BEGIN FDCAN2:TIM16_FDCAN_IT0_IRQn disable */
+ 250:Core/Src/fdcan.c ****     /**
+ 251:Core/Src/fdcan.c ****     * Uncomment the line below to disable the "TIM16_FDCAN_IT0_IRQn" interrupt
+ARM GAS  /tmp/ccWkPmLZ.s 			page 16
+
+
+ 252:Core/Src/fdcan.c ****     * Be aware, disabling shared interrupt may affect other IPs
+ 253:Core/Src/fdcan.c ****     */
+ 254:Core/Src/fdcan.c ****     /* HAL_NVIC_DisableIRQ(TIM16_FDCAN_IT0_IRQn); */
+ 255:Core/Src/fdcan.c ****   /* USER CODE END FDCAN2:TIM16_FDCAN_IT0_IRQn disable */
+ 256:Core/Src/fdcan.c **** 
+ 257:Core/Src/fdcan.c ****   /* USER CODE BEGIN FDCAN2_MspDeInit 1 */
+ 258:Core/Src/fdcan.c **** 
+ 259:Core/Src/fdcan.c ****   /* USER CODE END FDCAN2_MspDeInit 1 */
+ 260:Core/Src/fdcan.c ****   }
+ 261:Core/Src/fdcan.c **** }
+ 538              		.loc 1 261 1 view .LVU180
+ 539              		@ sp needed
+ 540 0010 10BD     		pop	{r4, pc}
+ 541              	.LVL22:
+ 542              	.L31:
+ 207:Core/Src/fdcan.c ****     if(HAL_RCC_FDCAN_CLK_ENABLED==0){
+ 543              		.loc 1 207 5 is_stmt 1 view .LVU181
+ 207:Core/Src/fdcan.c ****     if(HAL_RCC_FDCAN_CLK_ENABLED==0){
+ 544              		.loc 1 207 30 is_stmt 0 view .LVU182
+ 545 0012 124A     		ldr	r2, .L33+8
+ 546 0014 1368     		ldr	r3, [r2]
+ 547 0016 013B     		subs	r3, r3, #1
+ 548 0018 1360     		str	r3, [r2]
+ 208:Core/Src/fdcan.c ****       __HAL_RCC_FDCAN_CLK_DISABLE();
+ 549              		.loc 1 208 5 is_stmt 1 view .LVU183
+ 208:Core/Src/fdcan.c ****       __HAL_RCC_FDCAN_CLK_DISABLE();
+ 550              		.loc 1 208 7 is_stmt 0 view .LVU184
+ 551 001a 002B     		cmp	r3, #0
+ 552 001c 04D1     		bne	.L28
+ 209:Core/Src/fdcan.c ****     }
+ 553              		.loc 1 209 7 is_stmt 1 view .LVU185
+ 554 001e 104A     		ldr	r2, .L33+12
+ 555 0020 D36B     		ldr	r3, [r2, #60]
+ 556 0022 1049     		ldr	r1, .L33+16
+ 557 0024 0B40     		ands	r3, r1
+ 558 0026 D363     		str	r3, [r2, #60]
+ 559              	.L28:
+ 216:Core/Src/fdcan.c **** 
+ 560              		.loc 1 216 5 view .LVU186
+ 561 0028 0321     		movs	r1, #3
+ 562 002a 0F48     		ldr	r0, .L33+20
+ 563              	.LVL23:
+ 216:Core/Src/fdcan.c **** 
+ 564              		.loc 1 216 5 is_stmt 0 view .LVU187
+ 565 002c FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 566              	.LVL24:
+ 567 0030 EEE7     		b	.L26
+ 568              	.LVL25:
+ 569              	.L32:
+ 237:Core/Src/fdcan.c ****     if(HAL_RCC_FDCAN_CLK_ENABLED==0){
+ 570              		.loc 1 237 5 is_stmt 1 view .LVU188
+ 237:Core/Src/fdcan.c ****     if(HAL_RCC_FDCAN_CLK_ENABLED==0){
+ 571              		.loc 1 237 30 is_stmt 0 view .LVU189
+ 572 0032 0A4A     		ldr	r2, .L33+8
+ 573 0034 1368     		ldr	r3, [r2]
+ 574 0036 013B     		subs	r3, r3, #1
+ 575 0038 1360     		str	r3, [r2]
+ARM GAS  /tmp/ccWkPmLZ.s 			page 17
+
+
+ 238:Core/Src/fdcan.c ****       __HAL_RCC_FDCAN_CLK_DISABLE();
+ 576              		.loc 1 238 5 is_stmt 1 view .LVU190
+ 238:Core/Src/fdcan.c ****       __HAL_RCC_FDCAN_CLK_DISABLE();
+ 577              		.loc 1 238 7 is_stmt 0 view .LVU191
+ 578 003a 002B     		cmp	r3, #0
+ 579 003c 04D1     		bne	.L30
+ 239:Core/Src/fdcan.c ****     }
+ 580              		.loc 1 239 7 is_stmt 1 view .LVU192
+ 581 003e 084A     		ldr	r2, .L33+12
+ 582 0040 D36B     		ldr	r3, [r2, #60]
+ 583 0042 0849     		ldr	r1, .L33+16
+ 584 0044 0B40     		ands	r3, r1
+ 585 0046 D363     		str	r3, [r2, #60]
+ 586              	.L30:
+ 246:Core/Src/fdcan.c **** 
+ 587              		.loc 1 246 5 view .LVU193
+ 588 0048 0321     		movs	r1, #3
+ 589 004a 0848     		ldr	r0, .L33+24
+ 590              	.LVL26:
+ 246:Core/Src/fdcan.c **** 
+ 591              		.loc 1 246 5 is_stmt 0 view .LVU194
+ 592 004c FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 593              	.LVL27:
+ 594              		.loc 1 261 1 view .LVU195
+ 595 0050 DEE7     		b	.L26
+ 596              	.L34:
+ 597 0052 C046     		.align	2
+ 598              	.L33:
+ 599 0054 00640040 		.word	1073767424
+ 600 0058 00680040 		.word	1073768448
+ 601 005c 00000000 		.word	HAL_RCC_FDCAN_CLK_ENABLED
+ 602 0060 00100240 		.word	1073876992
+ 603 0064 FFEFFFFF 		.word	-4097
+ 604 0068 000C0050 		.word	1342180352
+ 605 006c 00040050 		.word	1342178304
+ 606              		.cfi_endproc
+ 607              	.LFE499:
+ 609              		.section	.bss.HAL_RCC_FDCAN_CLK_ENABLED,"aw",%nobits
+ 610              		.align	2
+ 613              	HAL_RCC_FDCAN_CLK_ENABLED:
+ 614 0000 00000000 		.space	4
+ 615              		.global	hfdcan2
+ 616              		.section	.bss.hfdcan2,"aw",%nobits
+ 617              		.align	2
+ 620              	hfdcan2:
+ 621 0000 00000000 		.space	100
+ 621      00000000 
+ 621      00000000 
+ 621      00000000 
+ 621      00000000 
+ 622              		.global	hfdcan1
+ 623              		.section	.bss.hfdcan1,"aw",%nobits
+ 624              		.align	2
+ 627              	hfdcan1:
+ 628 0000 00000000 		.space	100
+ 628      00000000 
+ 628      00000000 
+ARM GAS  /tmp/ccWkPmLZ.s 			page 18
+
+
+ 628      00000000 
+ 628      00000000 
+ 629              		.text
+ 630              	.Letext0:
+ 631              		.file 2 "Drivers/CMSIS/Device/ST/STM32G0xx/Include/stm32g0b1xx.h"
+ 632              		.file 3 "/usr/arm-none-eabi/include/machine/_default_types.h"
+ 633              		.file 4 "/usr/arm-none-eabi/include/sys/_stdint.h"
+ 634              		.file 5 "Drivers/CMSIS/Device/ST/STM32G0xx/Include/stm32g0xx.h"
+ 635              		.file 6 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_def.h"
+ 636              		.file 7 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_rcc_ex.h"
+ 637              		.file 8 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_gpio.h"
+ 638              		.file 9 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_fdcan.h"
+ 639              		.file 10 "Core/Inc/fdcan.h"
+ 640              		.file 11 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_ll_dma.h"
+ 641              		.file 12 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_cortex.h"
+ 642              		.file 13 "Core/Inc/main.h"
+ 643              		.file 14 "<built-in>"
+ARM GAS  /tmp/ccWkPmLZ.s 			page 19
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 fdcan.c
+     /tmp/ccWkPmLZ.s:19     .text.MX_FDCAN1_Init:00000000 $t
+     /tmp/ccWkPmLZ.s:25     .text.MX_FDCAN1_Init:00000000 MX_FDCAN1_Init
+     /tmp/ccWkPmLZ.s:117    .text.MX_FDCAN1_Init:00000044 $d
+     /tmp/ccWkPmLZ.s:627    .bss.hfdcan1:00000000 hfdcan1
+     /tmp/ccWkPmLZ.s:123    .text.MX_FDCAN2_Init:00000000 $t
+     /tmp/ccWkPmLZ.s:129    .text.MX_FDCAN2_Init:00000000 MX_FDCAN2_Init
+     /tmp/ccWkPmLZ.s:221    .text.MX_FDCAN2_Init:00000044 $d
+     /tmp/ccWkPmLZ.s:620    .bss.hfdcan2:00000000 hfdcan2
+     /tmp/ccWkPmLZ.s:227    .text.HAL_FDCAN_MspInit:00000000 $t
+     /tmp/ccWkPmLZ.s:233    .text.HAL_FDCAN_MspInit:00000000 HAL_FDCAN_MspInit
+     /tmp/ccWkPmLZ.s:494    .text.HAL_FDCAN_MspInit:00000114 $d
+     /tmp/ccWkPmLZ.s:613    .bss.HAL_RCC_FDCAN_CLK_ENABLED:00000000 HAL_RCC_FDCAN_CLK_ENABLED
+     /tmp/ccWkPmLZ.s:505    .text.HAL_FDCAN_MspDeInit:00000000 $t
+     /tmp/ccWkPmLZ.s:511    .text.HAL_FDCAN_MspDeInit:00000000 HAL_FDCAN_MspDeInit
+     /tmp/ccWkPmLZ.s:599    .text.HAL_FDCAN_MspDeInit:00000054 $d
+     /tmp/ccWkPmLZ.s:610    .bss.HAL_RCC_FDCAN_CLK_ENABLED:00000000 $d
+     /tmp/ccWkPmLZ.s:617    .bss.hfdcan2:00000000 $d
+     /tmp/ccWkPmLZ.s:624    .bss.hfdcan1:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_FDCAN_Init
+Error_Handler
+memset
+HAL_RCCEx_PeriphCLKConfig
+HAL_GPIO_Init
+HAL_NVIC_SetPriority
+HAL_NVIC_EnableIRQ
+HAL_GPIO_DeInit

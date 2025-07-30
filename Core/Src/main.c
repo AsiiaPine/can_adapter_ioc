@@ -33,51 +33,45 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include "usbd_cdc_if.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-typedef struct {
-    uint32_t id;
-    uint8_t dlc;
-    uint8_t data[8];
-    uint8_t channel; // 1 for FDCAN1, 2 for FDCAN2
-} can_message_t;
 
-typedef struct {
-    uint8_t command;
-    uint8_t channel;
-    uint32_t id;
-    uint8_t dlc;
-    uint8_t data[8];
-} usb_can_frame_t;
-
-/* USB-CAN Protocol Commands */
-#define CMD_CAN_SEND      0x01
-#define CMD_CAN_RECEIVE   0x02
-#define CMD_CAN_STATUS    0x03
-#define CMD_CAN_CONFIG    0x04
-#define CMD_CAN_RESET     0x05
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define USB_BUFFER_SIZE 64
-#define CAN_MAX_MESSAGES 10
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
+typedef struct {
+  uint32_t id;
+  uint8_t dlc;
+  uint8_t data[8];
+  uint8_t channel;  // 1 for FDCAN1, 2 for FDCAN2
+} can_message_t;
+
+typedef struct {
+  uint8_t command;
+  uint8_t channel;
+  uint32_t id;
+  uint8_t dlc;
+  uint8_t data[8];
+} usb_can_frame_t;
 
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-// static uint8_t usb_rx_buffer[USB_BUFFER_SIZE];
-// static uint8_t usb_tx_buffer[USB_BUFFER_SIZE];
-// static uint8_t usb_rx_index = 0;
-// static uint8_t usb_tx_index = 0;
+uint8_t usb_rx_buffer[USB_BUFFER_SIZE];
+uint8_t usb_tx_buffer[USB_BUFFER_SIZE];
+uint8_t usb_rx_index = 0;
+uint8_t usb_tx_index = 0;
 
 static can_message_t can_rx_queue[CAN_MAX_MESSAGES];
 static uint8_t can_rx_queue_head = 0;
@@ -145,28 +139,29 @@ int main(void)
   MX_IWDG_Init();
   MX_USB_Device_Init();
   /* USER CODE BEGIN 2 */
-  
+
   // Start CAN reception
   HAL_FDCAN_Start(&hfdcan1);
   HAL_FDCAN_Start(&hfdcan2);
-  
+
   // Activate CAN RX notifications
   HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
   HAL_FDCAN_ActivateNotification(&hfdcan2, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
-  
+
   // Initialize LED status
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);   // Red LED off
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);   // Green LED off
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);   // Blue LED off
-  
+
   // Send initial status
   uint8_t init_msg[] = "USB-CAN Adapter Ready\r\n";
-  CDC_Transmit_FS(init_msg, strlen((char*)init_msg));
+  CDC_Transmit_FS(init_msg, sizeof(init_msg) - 1);
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  uint32_t last_time = HAL_GetTick();
   while (1)
   {
     /* USER CODE END WHILE */
@@ -174,32 +169,36 @@ int main(void)
     /* USER CODE BEGIN 3 */
     // Feed watchdog
     HAL_IWDG_Refresh(&hiwdg);
-    
+    if (HAL_GetTick() - last_time > 1000) {
+      last_time = HAL_GetTick();
+      CDC_Transmit_FS(init_msg, sizeof(init_msg) - 1);
+    }
+
     // Update LED status
     update_led_status();
-    
+
     // Process any pending USB data
     if (usb_rx_index > 0) {
       process_usb_command(usb_rx_buffer, usb_rx_index);
       usb_rx_index = 0;
     }
-    
+
     // Send any queued CAN messages
     while (can_rx_queue_head != can_rx_queue_tail) {
       can_message_t *msg = &can_rx_queue[can_rx_queue_tail];
-      
+
       usb_can_frame_t frame;
       frame.command = CMD_CAN_RECEIVE;
       frame.channel = msg->channel;
       frame.id = msg->id;
       frame.dlc = msg->dlc;
       memcpy(frame.data, msg->data, 8);
-      
+
       send_usb_response((uint8_t*)&frame, sizeof(frame));
-      
+
       can_rx_queue_tail = (can_rx_queue_tail + 1) % CAN_MAX_MESSAGES;
     }
-    
+
     HAL_Delay(1);
   }
   /* USER CODE END 3 */
@@ -213,6 +212,7 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  RCC_CRSInitTypeDef pInit = {0};
 
   /** Configure the main internal regulator output voltage
   */
@@ -231,10 +231,10 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV1;
-  RCC_OscInitStruct.PLL.PLLN = 8;
+  RCC_OscInitStruct.PLL.PLLN = 9;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
-  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
+  RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV3;
+  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV3;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -246,12 +246,27 @@ void SystemClock_Config(void)
                               |RCC_CLOCKTYPE_PCLK1;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
   {
     Error_Handler();
   }
+
+  /** Enable the SYSCFG APB clock
+  */
+  __HAL_RCC_CRS_CLK_ENABLE();
+
+  /** Configures CRS
+  */
+  pInit.Prescaler = RCC_CRS_SYNC_DIV1;
+  pInit.Source = RCC_CRS_SYNC_SOURCE_USB;
+  pInit.Polarity = RCC_CRS_SYNC_POLARITY_RISING;
+  pInit.ReloadValue = __HAL_RCC_CRS_RELOADVALUE_CALCULATE(48000000,1000);
+  pInit.ErrorLimitValue = 34;
+  pInit.HSI48CalibrationValue = 32;
+
+  HAL_RCCEx_CRSConfig(&pInit);
 }
 
 /* USER CODE BEGIN 4 */
