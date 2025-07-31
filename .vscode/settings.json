@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "spi.h": "c",
+        "usb_device.h": "c",
+        "gpio.h": "c",
+        "usbd_cdc_if.h": "c",
+        "main.h": "c",
+        "tim.h": "c"
+    },
+}
