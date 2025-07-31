@@ -1,10 +1,13 @@
 {
-    "files.associations": {
-        "spi.h": "c",
-        "usb_device.h": "c",
-        "gpio.h": "c",
-        "usbd_cdc_if.h": "c",
-        "main.h": "c",
-        "tim.h": "c"
-    },
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/stm_ioc/Core/Inc",
+        "${workspaceFolder}/stm_ioc/USB_Device/App",
+        "${workspaceFolder}/stm_ioc/USB_Device/Target",
+        "${workspaceFolder}/stm_ioc/Drivers/STM32G0xx_HAL_Driver/Inc",
+        "${workspaceFolder}/stm_ioc/Drivers/STM32G0xx_HAL_Driver/Inc/Legacy",
+        "${workspaceFolder}/stm_ioc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc",
+        "${workspaceFolder}/stm_ioc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc",
+        "${workspaceFolder}/stm_ioc/Drivers/CMSIS/Device/ST/STM32G0xx/Include",
+        "${workspaceFolder}/stm_ioc/Drivers/CMSIS/Include"
+    ]
 }

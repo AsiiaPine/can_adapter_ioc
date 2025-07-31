@@ -47,7 +47,7 @@ void MX_FDCAN1_Init(void)
   hfdcan1.Init.ProtocolException = DISABLE;
   hfdcan1.Init.NominalPrescaler = 4;
   hfdcan1.Init.NominalSyncJumpWidth = 1;
-  hfdcan1.Init.NominalTimeSeg1 = 5;
+  hfdcan1.Init.NominalTimeSeg1 = 9;
   hfdcan1.Init.NominalTimeSeg2 = 2;
   hfdcan1.Init.DataPrescaler = 1;
   hfdcan1.Init.DataSyncJumpWidth = 1;
@@ -79,7 +79,7 @@ void MX_FDCAN2_Init(void)
   hfdcan2.Instance = FDCAN2;
   hfdcan2.Init.ClockDivider = FDCAN_CLOCK_DIV1;
   hfdcan2.Init.FrameFormat = FDCAN_FRAME_CLASSIC;
-  hfdcan2.Init.Mode = FDCAN_MODE_NORMAL;
+  hfdcan2.Init.Mode = FDCAN_MODE_EXTERNAL_LOOPBACK;
   hfdcan2.Init.AutoRetransmission = ENABLE;
   hfdcan2.Init.TransmitPause = ENABLE;
   hfdcan2.Init.ProtocolException = ENABLE;
@@ -92,7 +92,7 @@ void MX_FDCAN2_Init(void)
   hfdcan2.Init.DataTimeSeg1 = 1;
   hfdcan2.Init.DataTimeSeg2 = 1;
   hfdcan2.Init.StdFiltersNbr = 0;
-  hfdcan2.Init.ExtFiltersNbr = 0;
+  hfdcan2.Init.ExtFiltersNbr = 1;
   hfdcan2.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
   if (HAL_FDCAN_Init(&hfdcan2) != HAL_OK)
   {
@@ -148,6 +148,8 @@ void HAL_FDCAN_MspInit(FDCAN_HandleTypeDef* fdcanHandle)
     /* FDCAN1 interrupt Init */
     HAL_NVIC_SetPriority(TIM16_FDCAN_IT0_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(TIM16_FDCAN_IT0_IRQn);
+    HAL_NVIC_SetPriority(TIM17_FDCAN_IT1_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(TIM17_FDCAN_IT1_IRQn);
   /* USER CODE BEGIN FDCAN1_MspInit 1 */
 
   /* USER CODE END FDCAN1_MspInit 1 */
@@ -189,6 +191,8 @@ void HAL_FDCAN_MspInit(FDCAN_HandleTypeDef* fdcanHandle)
     /* FDCAN2 interrupt Init */
     HAL_NVIC_SetPriority(TIM16_FDCAN_IT0_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(TIM16_FDCAN_IT0_IRQn);
+    HAL_NVIC_SetPriority(TIM17_FDCAN_IT1_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(TIM17_FDCAN_IT1_IRQn);
   /* USER CODE BEGIN FDCAN2_MspInit 1 */
 
   /* USER CODE END FDCAN2_MspInit 1 */
@@ -224,6 +228,14 @@ void HAL_FDCAN_MspDeInit(FDCAN_HandleTypeDef* fdcanHandle)
     /* HAL_NVIC_DisableIRQ(TIM16_FDCAN_IT0_IRQn); */
   /* USER CODE END FDCAN1:TIM16_FDCAN_IT0_IRQn disable */
 
+  /* USER CODE BEGIN FDCAN1:TIM17_FDCAN_IT1_IRQn disable */
+    /**
+    * Uncomment the line below to disable the "TIM17_FDCAN_IT1_IRQn" interrupt
+    * Be aware, disabling shared interrupt may affect other IPs
+    */
+    /* HAL_NVIC_DisableIRQ(TIM17_FDCAN_IT1_IRQn); */
+  /* USER CODE END FDCAN1:TIM17_FDCAN_IT1_IRQn disable */
+
   /* USER CODE BEGIN FDCAN1_MspDeInit 1 */
 
   /* USER CODE END FDCAN1_MspDeInit 1 */
@@ -253,6 +265,14 @@ void HAL_FDCAN_MspDeInit(FDCAN_HandleTypeDef* fdcanHandle)
     */
     /* HAL_NVIC_DisableIRQ(TIM16_FDCAN_IT0_IRQn); */
   /* USER CODE END FDCAN2:TIM16_FDCAN_IT0_IRQn disable */
+
+  /* USER CODE BEGIN FDCAN2:TIM17_FDCAN_IT1_IRQn disable */
+    /**
+    * Uncomment the line below to disable the "TIM17_FDCAN_IT1_IRQn" interrupt
+    * Be aware, disabling shared interrupt may affect other IPs
+    */
+    /* HAL_NVIC_DisableIRQ(TIM17_FDCAN_IT1_IRQn); */
+  /* USER CODE END FDCAN2:TIM17_FDCAN_IT1_IRQn disable */
 
   /* USER CODE BEGIN FDCAN2_MspDeInit 1 */
 

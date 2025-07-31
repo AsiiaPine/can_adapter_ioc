@@ -151,9 +151,9 @@ int main(void)
   HAL_FDCAN_ActivateNotification(&hfdcan2, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
 
   // Initialize LED status
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);   // Red LED off
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);   // Green LED off
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);   // Blue LED off
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);   // Red LED off -- can error
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);   // Green LED off -- can irq received
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);   // Blue LED off -- usb connected
 
   // Send initial status
   uint8_t init_msg[] = "USB-CAN Adapter Ready\r\n";
@@ -161,7 +161,7 @@ int main(void)
 
   // Test: Send a test CAN message to trigger interrupt
   can_message_t test_msg;
-  test_msg.isExtended = true;
+  test_msg.isExtended = false;
   test_msg.id = 0x123;
   test_msg.dlc = 4;
   test_msg.channel = 1;
@@ -210,6 +210,8 @@ int main(void)
       test_msg.id = 0x123;
       test_msg.dlc = 4;
       test_msg.channel = 1;
+      // test_msg.channel ++;
+      // test_msg.channel %= 2;
       test_msg.data[0] = 0xAA;
       test_msg.data[1] = 0xBB;
       test_msg.data[2] = 0xCC;
@@ -233,6 +235,8 @@ int main(void)
 
     // Send any queued CAN messages
     while (can_rx_queue_head != can_rx_queue_tail) {
+      uint8_t rx_msg[64];
+
       can_message_t *msg = &can_rx_queue[can_rx_queue_tail];
 
       usb_can_frame_t frame;
@@ -399,6 +403,10 @@ static void receive_can_message(FDCAN_HandleTypeDef *hfdcan, uint8_t channel)
     uint8_t rx_data[8];
 
     if (HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &rx_header, rx_data) == HAL_OK) {
+        uint8_t rx_msg[64];
+        int len = snprintf((char*)rx_msg, sizeof(rx_msg), "CAN%d: got a message\r\n", channel);
+        CDC_Transmit_FS(rx_msg, len);
+
         // Check if we have space in the queue
         uint8_t next_head = (can_rx_queue_head + 1) % CAN_MAX_MESSAGES;
         if (next_head != can_rx_queue_tail) {
@@ -425,24 +433,17 @@ static void send_usb_response(uint8_t *data, uint16_t len)
 
 static void update_led_status(void)
 {
-    static uint32_t led_timer = 0;
-    static uint8_t led_state = 0;
+    // static uint32_t led_timer = 0;
+    // static uint8_t led_state = 0;
     
-    led_timer++;
-    if (led_timer >= 500) { // 500ms
-        led_timer = 0;
-        led_state = !led_state;
-        
-        // Green LED: USB connected
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, led_state ? GPIO_PIN_RESET : GPIO_PIN_SET);
-        
-        // Blue LED: CAN activity
-        if (can1_rx_count > 0 || can2_rx_count > 0 || can1_tx_count > 0 || can2_tx_count > 0) {
-            HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_RESET);
-        } else {
-            HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);
-        }
-    }
+    // led_timer++;
+    // if (led_timer >= 500) { // 500ms
+    //     led_timer = 0;
+    //     led_state = !led_state;
+
+    //     // Green LED: USB connected
+    //     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, led_state ? GPIO_PIN_RESET : GPIO_PIN_SET);
+    // }
 }
 
 static void toggle_led(uint16_t pin)
@@ -453,9 +454,9 @@ static void toggle_led(uint16_t pin)
 /* CAN Interrupt Callbacks */
 void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 {
-  // Debug: Toggle red LED to indicate interrupt was called
-  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-  
+  // Debug: Toggle green LED to indicate interrupt was called
+  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
+
   if(FDCAN1 == hfdcan->Instance){
     if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != RESET)
     {
@@ -477,7 +478,19 @@ void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
 void HAL_FDCAN_TxEventFifoCallback(FDCAN_HandleTypeDef *hfdcan, uint32_t TxEventFifoITs)
 {
     // Optional: Handle transmission events
-    UNUSED(hfdcan);
+    // UNUSED(hfdcan);
+
+    if (hfdcan == &hfdcan1) {
+      // Toggle red LED to indicate CAN1 error
+      HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+      // Send error message via USB
+    } else if (hfdcan == &hfdcan2) {
+      // Toggle red LED to indicate CAN2 error
+      HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+      // Send error message via USB
+      uint8_t error_msg[] = "Retransmit: CAN2\r\n";
+      CDC_Transmit_FS(error_msg, sizeof(error_msg) - 1);
+    }
 }
 
 void HAL_FDCAN_ErrorCallback(FDCAN_HandleTypeDef *hfdcan)

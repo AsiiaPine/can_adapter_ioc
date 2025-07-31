@@ -7,7 +7,7 @@
     {
         "name": "Simple Cortex Debug",
         "cwd": "${workspaceFolder}",
-        "executable": "stm_ioc/build/stm_ioc.elf",
+        "executable": "build/stm_ioc.elf",
         "request": "launch",
         "type": "cortex-debug",
         "runToEntryPoint": "main",
