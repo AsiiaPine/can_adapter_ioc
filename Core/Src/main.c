@@ -141,13 +141,41 @@ int main(void)
   MX_IWDG_Init();
   MX_USB_Device_Init();
   /* USER CODE BEGIN 2 */
-  
+
+  // FDCAN_FilterTypeDef sFilterConfig;
+  // sFilterConfig.IdType = FDCAN_EXTENDED_ID;
+  // sFilterConfig.FilterIndex = 0;
+  // sFilterConfig.FilterType = FDCAN_FILTER_MASK;
+  // sFilterConfig.FilterConfig = FDCAN_FILTER_DISABLE;
+
+  // if (HAL_FDCAN_ConfigFilter(&hfdcan1, &sFilterConfig) != HAL_OK) {
+  //   return -1;
+  // }
+  // if (HAL_FDCAN_ConfigFilter(&hfdcan2, &sFilterConfig) != HAL_OK) {
+  //   return -1;
+  // }
+  // if (HAL_FDCAN_ConfigGlobalFilter(&hfdcan1, FDCAN_ACCEPT_IN_RX_FIFO1, FDCAN_ACCEPT_IN_RX_FIFO1, FDCAN_ACCEPT_IN_RX_FIFO1, FDCAN_ACCEPT_IN_RX_FIFO1,) != HAL_OK) {
+  //   return -1;
+  // }
+  // if (HAL_FDCAN_ConfigGlobalFilter(&hfdcan2, FDCAN_ACCEPT_IN_RX_FIFO1, FDCAN_ACCEPT_IN_RX_FIFO1, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE) != HAL_OK) {
+  //   return -1;
+  // }
+
+  HAL_FDCAN_ConfigExtendedIdMask(&hfdcan1, 0x1FFFFFFFU);
+  HAL_FDCAN_ConfigExtendedIdMask(&hfdcan2, 0x1FFFFFFFU);
   HAL_FDCAN_ConfigInterruptLines(&hfdcan1, FDCAN_IT_GROUP_RX_FIFO0, FDCAN_INTERRUPT_LINE0);
   HAL_FDCAN_ConfigInterruptLines(&hfdcan2, FDCAN_IT_GROUP_RX_FIFO1, FDCAN_INTERRUPT_LINE1);
   // Start CAN reception
   HAL_FDCAN_Start(&hfdcan1);
   HAL_FDCAN_Start(&hfdcan2);
 
+  /*
+    TODO:
+    1. Check HAL_FDCAN_ConfigRamWatchdog
+    2. HAL_FDCAN_AddMessageToTxFifoQ
+    3. HAL_FDCAN_ConfigRxFifoOverwrite
+
+  */ 
 
   // Activate CAN RX notifications
   HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
@@ -207,28 +235,28 @@ int main(void)
     // Update LED status
     update_led_status();
 
-    // Test: Send periodic test CAN message for debugging
-    if (HAL_GetTick() - last_send_time >= 1000) { // Every 1 second
-      can_message_t test_msg;
-      test_msg.id = 0x123;
-      test_msg.dlc = 4;
-      test_msg.channel = 1;
-      // test_msg.channel ++;
-      // test_msg.channel %= 2;
-      test_msg.data[0] = 0xAA;
-      test_msg.data[1] = 0xBB;
-      test_msg.data[2] = 0xCC;
-      test_msg.data[3] = 0xDD;
-      send_can_message(&test_msg);
+    // // Test: Send periodic test CAN message for debugging
+    // if (HAL_GetTick() - last_send_time >= 1000) { // Every 1 second
+    //   can_message_t test_msg;
+    //   test_msg.id = 0x123;
+    //   test_msg.dlc = 4;
+    //   test_msg.channel = 1;
+    //   // test_msg.channel ++;
+    //   // test_msg.channel %= 2;
+    //   test_msg.data[0] = 0xAA;
+    //   test_msg.data[1] = 0xBB;
+    //   test_msg.data[2] = 0xCC;
+    //   test_msg.data[3] = 0xDD;
+    //   send_can_message(&test_msg);
 
-      // Send status via USB
-      uint8_t status_msg[64];
-      int len = snprintf((char*)status_msg, sizeof(status_msg),
-          "CAN1: RX=%lu TX=%lu, CAN2: RX=%lu TX=%lu\r\n",
-          can1_rx_count, can1_tx_count, can2_rx_count, can2_tx_count);
-      CDC_Transmit_FS(status_msg, len);
-      last_send_time = HAL_GetTick();
-    }
+    //   // Send status via USB
+    //   uint8_t status_msg[64];
+    //   int len = snprintf((char*)status_msg, sizeof(status_msg),
+    //       "CAN1: RX=%lu TX=%lu, CAN2: RX=%lu TX=%lu\r\n",
+    //       can1_rx_count, can1_tx_count, can2_rx_count, can2_tx_count);
+    //   CDC_Transmit_FS(status_msg, len);
+    //   last_send_time = HAL_GetTick();
+    // }
 
     // Process any pending USB data
     if (usb_rx_index > 0) {
@@ -247,7 +275,7 @@ int main(void)
       frame.channel = msg->channel;
       frame.id = msg->id;
       frame.dlc = msg->dlc;
-      memcpy(frame.data, msg->data, 8);
+      sprintf((char*)frame.data, "%lu", msg->id);
 
       send_usb_response((uint8_t*)&frame, sizeof(frame));
 
@@ -404,8 +432,27 @@ static void receive_can_message(FDCAN_HandleTypeDef *hfdcan, uint8_t channel)
 {
     FDCAN_RxHeaderTypeDef rx_header;
     uint8_t rx_data[8];
+    if (channel == 1) {
+      if (HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &rx_header, rx_data) == HAL_OK) {
+          uint8_t rx_msg[64];
+          int len = snprintf((char*)rx_msg, sizeof(rx_msg), "CAN%d: got a message\r\n", channel);
+          CDC_Transmit_FS(rx_msg, len);
 
-    if (HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &rx_header, rx_data) == HAL_OK) {
+          // Check if we have space in the queue
+          uint8_t next_head = (can_rx_queue_head + 1) % CAN_MAX_MESSAGES;
+          if (next_head != can_rx_queue_tail) {
+              can_message_t *msg = &can_rx_queue[can_rx_queue_head];
+              msg->id = rx_header.Identifier;
+              msg->dlc = rx_header.DataLength;
+              msg->channel = channel;
+              memcpy(msg->data, rx_data, 8);
+              can_rx_queue_head = next_head;
+              can1_rx_count++;
+          }
+        }
+      return;
+    }
+    if (HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO1, &rx_header, rx_data) == HAL_OK) {
         uint8_t rx_msg[64];
         int len = snprintf((char*)rx_msg, sizeof(rx_msg), "CAN%d: got a message\r\n", channel);
         CDC_Transmit_FS(rx_msg, len);
@@ -419,12 +466,7 @@ static void receive_can_message(FDCAN_HandleTypeDef *hfdcan, uint8_t channel)
             msg->channel = channel;
             memcpy(msg->data, rx_data, 8);
             can_rx_queue_head = next_head;
-
-            if (channel == 1) {
-                can1_rx_count++;
-            } else {
-                can2_rx_count++;
-            }
+              can2_rx_count++;
         }
     }
 }
