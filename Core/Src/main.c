@@ -55,6 +55,7 @@ typedef struct {
   uint8_t data[8];
   uint8_t channel;  // 1 for FDCAN1, 2 for FDCAN2
   bool isExtended;
+  bool isRemote;
 } can_message_t;
 
 typedef struct {
@@ -142,30 +143,10 @@ int main(void)
   MX_USB_Device_Init();
   /* USER CODE BEGIN 2 */
 
-  // FDCAN_FilterTypeDef sFilterConfig;
-  // sFilterConfig.IdType = FDCAN_EXTENDED_ID;
-  // sFilterConfig.FilterIndex = 0;
-  // sFilterConfig.FilterType = FDCAN_FILTER_MASK;
-  // sFilterConfig.FilterConfig = FDCAN_FILTER_DISABLE;
-
-  // if (HAL_FDCAN_ConfigFilter(&hfdcan1, &sFilterConfig) != HAL_OK) {
-  //   return -1;
-  // }
-  // if (HAL_FDCAN_ConfigFilter(&hfdcan2, &sFilterConfig) != HAL_OK) {
-  //   return -1;
-  // }
-  // if (HAL_FDCAN_ConfigGlobalFilter(&hfdcan1, FDCAN_ACCEPT_IN_RX_FIFO1, FDCAN_ACCEPT_IN_RX_FIFO1, FDCAN_ACCEPT_IN_RX_FIFO1, FDCAN_ACCEPT_IN_RX_FIFO1,) != HAL_OK) {
-  //   return -1;
-  // }
-  // if (HAL_FDCAN_ConfigGlobalFilter(&hfdcan2, FDCAN_ACCEPT_IN_RX_FIFO1, FDCAN_ACCEPT_IN_RX_FIFO1, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE) != HAL_OK) {
-  //   return -1;
-  // }
-
   HAL_FDCAN_ConfigExtendedIdMask(&hfdcan1, 0x1FFFFFFFU);
   HAL_FDCAN_ConfigExtendedIdMask(&hfdcan2, 0x1FFFFFFFU);
   HAL_FDCAN_ConfigInterruptLines(&hfdcan1, FDCAN_IT_GROUP_RX_FIFO0, FDCAN_INTERRUPT_LINE0);
   HAL_FDCAN_ConfigInterruptLines(&hfdcan2, FDCAN_IT_GROUP_RX_FIFO1, FDCAN_INTERRUPT_LINE1);
-  // HAL_FDCAN_ConfigInterruptLines(&hfdcan2, FDCAN_IT_GROUP_RX_FIFO1, FDCAN_INTERRUPT_LINE1);
   // Start CAN reception
   HAL_FDCAN_Start(&hfdcan1);
   HAL_FDCAN_Start(&hfdcan2);
@@ -193,14 +174,11 @@ int main(void)
 
   // Test: Send a test CAN message to trigger interrupt
   can_message_t test_msg;
-  test_msg.isExtended = false;
-  test_msg.id = 0x123;
-  test_msg.dlc = 4;
+  test_msg.isExtended = true;
+  test_msg.isRemote = true;
+  test_msg.id = 0x0c01ff;
+  test_msg.dlc = 0;
   test_msg.channel = 1;
-  test_msg.data[0] = 0x11;
-  test_msg.data[1] = 0x22;
-  test_msg.data[2] = 0x33;
-  test_msg.data[3] = 0x44;
   send_can_message(&test_msg);
 
   // Debug: Check CAN state
@@ -236,28 +214,30 @@ int main(void)
     // Update LED status
     update_led_status();
 
-    // // Test: Send periodic test CAN message for debugging
-    // if (HAL_GetTick() - last_send_time >= 1000) { // Every 1 second
-    //   can_message_t test_msg;
-    //   test_msg.id = 0x123;
-    //   test_msg.dlc = 4;
-    //   test_msg.channel = 1;
-    //   // test_msg.channel ++;
-    //   // test_msg.channel %= 2;
-    //   test_msg.data[0] = 0xAA;
-    //   test_msg.data[1] = 0xBB;
-    //   test_msg.data[2] = 0xCC;
-    //   test_msg.data[3] = 0xDD;
-    //   send_can_message(&test_msg);
+    // Test: Send periodic test CAN message for debugging
+    if (HAL_GetTick() - last_send_time >= 1000) { // Every 1 second
+      can_message_t test_msg;
+      test_msg.id = 0x0c01ff;
+      test_msg.dlc = 4;
+      test_msg.isExtended = true;
+      test_msg.channel = 1;
+      // test_msg.channel ++;
+      // test_msg.channel %= 2;
+      test_msg.data[0] = 0xAA;
+      test_msg.data[1] = 0xBB;
+      test_msg.data[2] = 0xCC;
+      test_msg.data[3] = 0xDD;
 
-    //   // Send status via USB
-    //   uint8_t status_msg[64];
-    //   int len = snprintf((char*)status_msg, sizeof(status_msg),
-    //       "CAN1: RX=%lu TX=%lu, CAN2: RX=%lu TX=%lu\r\n",
-    //       can1_rx_count, can1_tx_count, can2_rx_count, can2_tx_count);
-    //   CDC_Transmit_FS(status_msg, len);
-    //   last_send_time = HAL_GetTick();
-    // }
+      send_can_message(&test_msg);
+
+      // Send status via USB
+      uint8_t status_msg[64];
+      int len = snprintf((char*)status_msg, sizeof(status_msg),
+          "CAN1: RX=%lu TX=%lu, CAN2: RX=%lu TX=%lu\r\n",
+          can1_rx_count, can1_tx_count, can2_rx_count, can2_tx_count);
+      CDC_Transmit_FS(status_msg, len);
+      last_send_time = HAL_GetTick();
+    }
 
     // Process any pending USB data
     if (usb_rx_index > 0) {
@@ -410,7 +390,7 @@ static void send_can_message(can_message_t *msg)
     FDCAN_TxHeaderTypeDef tx_header;
     tx_header.Identifier = msg->id;
     tx_header.IdType = msg->isExtended ? FDCAN_EXTENDED_ID : FDCAN_STANDARD_ID;
-    tx_header.TxFrameType = FDCAN_DATA_FRAME;
+    tx_header.TxFrameType = msg->isRemote ? FDCAN_REMOTE_FRAME : FDCAN_DATA_FRAME;
     tx_header.DataLength = msg->dlc;
     tx_header.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
     tx_header.BitRateSwitch = FDCAN_BRS_OFF;
@@ -478,7 +458,7 @@ static void send_can_to_usb(can_message_t *msg)
     frame.channel = msg->channel;
     frame.id = msg->id;
     frame.dlc = msg->dlc;
-    sprintf((char*)frame.data, "%lu", msg->id);
+    sprintf((char*)frame.data, "%lu\n", msg->id);
 
     send_usb_response((uint8_t*)&frame, sizeof(frame));
 }
