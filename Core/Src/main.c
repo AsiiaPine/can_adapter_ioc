@@ -189,6 +189,25 @@ int main(void)
   CDC_Transmit_FS(can_state_msg, state_len);
 
   /* USER CODE END 2 */
+  can_message_t test_messages[2];
+  test_messages[0].id = 0x0c01ff;
+  test_messages[0].dlc = 2;
+  test_messages[0].channel = 1;
+  test_messages[0].isExtended = true;
+  test_messages[0].isRemote = true;
+  test_messages[0].data[0] = 0x0060;
+  test_messages[0].data[1] = 0x00;
+
+  test_messages[1].id = 0x0c01ff;
+  test_messages[1].dlc = 4;
+  test_messages[1].channel = 1;
+  test_messages[1].isExtended = true;
+  test_messages[1].isRemote = false;
+  test_messages[1].data[0] = 0x0020;
+  test_messages[1].data[1] = 0x00;
+  test_messages[1].data[2] = 0xB8;
+  test_messages[1].data[3] = 0x0B;
+  static int i = 0;
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -216,19 +235,19 @@ int main(void)
 
     // Test: Send periodic test CAN message for debugging
     if (HAL_GetTick() - last_send_time >= 1000) { // Every 1 second
-      can_message_t test_msg;
-      test_msg.id = 0x0c01ff;
-      test_msg.dlc = 4;
-      test_msg.isExtended = true;
-      test_msg.channel = 1;
-      // test_msg.channel ++;
-      // test_msg.channel %= 2;
-      test_msg.data[0] = 0xAA;
-      test_msg.data[1] = 0xBB;
-      test_msg.data[2] = 0xCC;
-      test_msg.data[3] = 0xDD;
-
-      send_can_message(&test_msg);
+      // can_message_t test_msg;
+      // test_msg.id = 0x0c01ff;
+      // test_msg.dlc = 4;
+      // test_msg.isExtended = true;
+      // test_msg.channel = 1;
+      // // test_msg.channel ++;
+      // // test_msg.channel %= 2;
+      // test_msg.data[0] = 0xAA;
+      // test_msg.data[1] = 0xBB;
+      // test_msg.data[2] = 0xCC;
+      // test_msg.data[3] = 0xDD;
+      i = (i + 1) % 2; // Toggle between two test messages
+      send_can_message(&test_messages[i]);
 
       // Send status via USB
       uint8_t status_msg[64];
@@ -391,7 +410,8 @@ static void send_can_message(can_message_t *msg)
     tx_header.Identifier = msg->id;
     tx_header.IdType = msg->isExtended ? FDCAN_EXTENDED_ID : FDCAN_STANDARD_ID;
     tx_header.TxFrameType = msg->isRemote ? FDCAN_REMOTE_FRAME : FDCAN_DATA_FRAME;
-    tx_header.DataLength = msg->dlc;
+    tx_header.DataLength = msg->dlc << 16;
+    // 10  0000   0000  0000  0000
     tx_header.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
     tx_header.BitRateSwitch = FDCAN_BRS_OFF;
     tx_header.FDFormat = FDCAN_CLASSIC_CAN;
