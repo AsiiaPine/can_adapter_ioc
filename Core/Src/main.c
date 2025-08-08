@@ -61,7 +61,7 @@ typedef struct {
 typedef struct {
   uint8_t command;
   uint8_t channel;
-  uint32_t id;
+  uint8_t id[9];
   uint8_t dlc;
   uint8_t data[8];
 } usb_can_frame_t;
@@ -156,7 +156,6 @@ int main(void)
     1. Check HAL_FDCAN_ConfigRamWatchdog
     2. HAL_FDCAN_AddMessageToTxFifoQ
     3. HAL_FDCAN_ConfigRxFifoOverwrite
-
   */ 
 
   // Activate CAN RX notifications
@@ -187,8 +186,6 @@ int main(void)
       "CAN1 State: %lu, CAN2 State: %lu\r\n",
       hfdcan1.State, hfdcan2.State);
   CDC_Transmit_FS(can_state_msg, state_len);
-
-  /* USER CODE END 2 */
   can_message_t test_messages[2];
   test_messages[0].id = 0x0c01ff;
   test_messages[0].dlc = 2;
@@ -208,6 +205,7 @@ int main(void)
   test_messages[1].data[2] = 0xB8;
   test_messages[1].data[3] = 0x0B;
   static int i = 0;
+  /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -273,11 +271,24 @@ int main(void)
       usb_can_frame_t frame;
       frame.command = CMD_CAN_RECEIVE;
       frame.channel = msg->channel;
-      frame.id = msg->id;
       frame.dlc = msg->dlc;
-      sprintf((char*)frame.data, "%lu", msg->id);
+      for (int i = 0; i < 8; i++) {
+        frame.data[i] = msg->data[i];
+      }
+      uint16_t id_mask = 0xf;
+      for (int i = 0; i < 9; i++) {
+        id_mask <<= 4;
+        frame.id[i] = msg->id & id_mask + '0';
+      }
 
-      send_usb_response((uint8_t*)&frame, sizeof(frame));
+      sprintf((char*)rx_msg, "id: %lu\n", msg->id);
+      CDC_Transmit_FS(rx_msg, strlen((char*)rx_msg));
+      for (int i = 0; i < 8; i++) {
+        sprintf((char*)rx_msg, "data: %d %lu ", i, msg->data[i]);
+        CDC_Transmit_FS(rx_msg, strlen((char*)rx_msg));
+      }
+      // snprintf((char*)rx_msg, strlen((char*)rx_msg), "data: %lu\n", msg->data);
+      // send_usb_response((uint8_t*)&frame, sizeof(frame));
 
       can_rx_queue_tail = (can_rx_queue_tail + 1) % CAN_MAX_MESSAGES;
     }
@@ -365,7 +376,7 @@ static void process_usb_command(uint8_t *data, uint16_t len)
     switch (frame->command) {
         case CMD_CAN_SEND: {
             can_message_t msg;
-            msg.id = frame->id;
+            msg.id = strtoul((char*)frame->id, NULL, 16);
             msg.dlc = frame->dlc;
             msg.channel = frame->channel;
             memcpy(msg.data, frame->data, 8);
@@ -446,7 +457,11 @@ static void receive_can_message(FDCAN_HandleTypeDef *hfdcan, uint8_t channel)
             msg->channel = channel;
             memcpy(msg->data, rx_data, 8);
             can_rx_queue_head = next_head;
-            can1_rx_count++;
+            if (channel == 1) {
+                can1_rx_count++;
+            } else {
+                can2_rx_count++;
+            }
             return;
         }
     }
@@ -476,8 +491,11 @@ static void send_can_to_usb(can_message_t *msg)
     usb_can_frame_t frame;
     frame.command = CMD_CAN_RECEIVE;
     frame.channel = msg->channel;
-    frame.id = msg->id;
-    frame.dlc = msg->dlc;
+    uint16_t id_mask = 0xf;
+    for (int i = 0; i < 9; i++) {
+      id_mask <<= 4;
+      frame.id[i] = msg->id & id_mask + '0';
+    }    frame.dlc = msg->dlc;
     sprintf((char*)frame.data, "%lu\n", msg->id);
 
     send_usb_response((uint8_t*)&frame, sizeof(frame));
