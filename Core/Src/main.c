@@ -98,11 +98,26 @@ static void receive_can_message(FDCAN_HandleTypeDef *hfdcan, uint8_t channel);
 static void send_usb_response(uint8_t *data, uint16_t len);
 static void update_led_status(void);
 static void toggle_led(uint16_t pin);
+static void send_can_to_usb(can_message_t *msg);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void printBits(size_t const size, void const * const ptr, char* const str)
+{
+    unsigned char *b = (unsigned char*) ptr;
+    unsigned char byte;
+    int i, j;
+    char* str_ptr = str;
+    for (i = size-1; i >= 0; i--) {
+        for (j = 7; j >= 0; j--) {
+            byte = (b[i] >> j) & 1;
+            snprintf(str_ptr, 2, "%d", byte);
+            str_ptr++;
+        }
+    }
+}
 /* USER CODE END 0 */
 
 /**
@@ -264,32 +279,11 @@ int main(void)
 
     // Send any queued CAN messages
     while (can_rx_queue_head != can_rx_queue_tail) {
-      uint8_t rx_msg[64];
+      char rx_msg[64];
 
       can_message_t *msg = &can_rx_queue[can_rx_queue_tail];
 
-      usb_can_frame_t frame;
-      frame.command = CMD_CAN_RECEIVE;
-      frame.channel = msg->channel;
-      frame.dlc = msg->dlc;
-      for (int i = 0; i < 8; i++) {
-        frame.data[i] = msg->data[i];
-      }
-      uint16_t id_mask = 0xf;
-      for (int i = 0; i < 9; i++) {
-        id_mask <<= 4;
-        frame.id[i] = msg->id & id_mask + '0';
-      }
-
-      sprintf((char*)rx_msg, "id: %lu\n", msg->id);
-      CDC_Transmit_FS(rx_msg, strlen((char*)rx_msg));
-      for (int i = 0; i < 8; i++) {
-        sprintf((char*)rx_msg, "data: %d %lu ", i, msg->data[i]);
-        CDC_Transmit_FS(rx_msg, strlen((char*)rx_msg));
-      }
-      // snprintf((char*)rx_msg, strlen((char*)rx_msg), "data: %lu\n", msg->data);
-      // send_usb_response((uint8_t*)&frame, sizeof(frame));
-
+      send_can_to_usb(msg);
       can_rx_queue_tail = (can_rx_queue_tail + 1) % CAN_MAX_MESSAGES;
     }
   }
@@ -491,14 +485,43 @@ static void send_can_to_usb(can_message_t *msg)
     usb_can_frame_t frame;
     frame.command = CMD_CAN_RECEIVE;
     frame.channel = msg->channel;
-    uint16_t id_mask = 0xf;
-    for (int i = 0; i < 9; i++) {
-      id_mask <<= 4;
-      frame.id[i] = msg->id & id_mask + '0';
-    }    frame.dlc = msg->dlc;
-    sprintf((char*)frame.data, "%lu\n", msg->id);
 
-    send_usb_response((uint8_t*)&frame, sizeof(frame));
+    // Extract each nibble (4 bits) from the ID
+    for (int i = 0; i < 8; i++) {
+      // Calculate shift amount (4 bits per nibble, starting from MSB)
+      int shift = (7 - i) * 4;
+      // Extract the nibble and store it
+      frame.id[i] = (msg->id >> shift) & 0xF;
+    }
+    frame.dlc = msg->dlc;
+    for (int i = 0; i < 8; i++) {
+      frame.data[i] = msg->data[i];
+    }
+    char init_id_str[9];
+
+    sprintf((char*)init_id_str, "%X\n", msg->id);
+    CDC_Transmit_FS(init_id_str, strlen((char*)init_id_str));
+
+    // snprintf((char*)rx_msg, strlen((char*)rx_msg), "data: %lu\n", msg->data);
+    // send_usb_response((uint8_t*)&frame, sizeof(frame));
+
+
+    frame.dlc = msg->dlc;
+
+    char rx_msg[64] = {};
+
+    char dlc_str[8];
+    snprintf(dlc_str, 8, "%X", (int)(msg->dlc));
+
+    char cmd_str[2];
+    snprintf(cmd_str, 2, "%X", frame.command);
+    char data_str[64];
+    for (int i = 0; i < 8; i++) {
+      snprintf(data_str + i*2, 3, "%02X", frame.data[i]);
+    }
+    sprintf((char*)rx_msg, "cmd: %s id: %s dlc: %s data: %s\r\n", cmd_str, init_id_str, dlc_str, data_str);
+    CDC_Transmit_FS((uint8_t*)rx_msg, strlen((char*)rx_msg));
+    // send_usb_response((uint8_t*)&frame, sizeof(frame));
 }
 
 static void send_usb_response(uint8_t *data, uint16_t len)
