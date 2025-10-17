@@ -126,7 +126,7 @@ static int8_t CDC_Init_FS(void);
 static int8_t CDC_DeInit_FS(void);
 static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length);
 static int8_t CDC_Receive_FS(uint8_t* pbuf, uint32_t *Len);
-static int8_t CDC_TransmitCplt_FS(uint8_t *pbuf, uint32_t *Len, uint8_t epnum);
+static int8_t (uint8_t *pbuf, uint32_t *Len, uint8_t epnum);
 
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_DECLARATION */
 
@@ -262,20 +262,8 @@ static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
 static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 {
   /* USER CODE BEGIN 6 */
-  // Accumulate received data for CAN protocol processing
-  if (usb_rx_index + *Len < USB_BUFFER_SIZE) {
-    memcpy(&usb_rx_buffer[usb_rx_index], Buf, *Len);
-    usb_rx_index += *Len;
-  } else {
-    // Buffer overflow, reset index
-    usb_rx_index = 0;
-    memcpy(&usb_rx_buffer[usb_rx_index], Buf, *Len);
-    // Optionally, you can handle the overflow case here (e.g., log an error)
-  }
-
-  USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
-  USBD_CDC_ReceivePacket(&hUsbDeviceFS);
-  return (USBD_OK);
+  return process_usb_command(Buf, *Len);
+  
   /* USER CODE END 6 */
 }
 
@@ -323,6 +311,7 @@ static int8_t CDC_TransmitCplt_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum)
   UNUSED(Buf);
   UNUSED(Len);
   UNUSED(epnum);
+  result = transmit_complete_callback(Buf, Len, epnum);
   /* USER CODE END 13 */
   return result;
 }

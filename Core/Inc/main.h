@@ -31,6 +31,11 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
+/* Private define ------------------------------------------------------------*/
+#define USB_BUFFER_SIZE 64
+#define CAN_MAX_MESSAGES 10
+
 /* USB-CAN Protocol Commands */
 #define CMD_CAN_SEND      0x01
 #define CMD_CAN_RECEIVE   0x02
@@ -38,9 +43,6 @@ extern "C" {
 #define CMD_CAN_CONFIG    0x04
 #define CMD_CAN_RESET     0x05
 
-/* Private define ------------------------------------------------------------*/
-#define USB_BUFFER_SIZE 64
-#define CAN_MAX_MESSAGES 10
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -50,7 +52,10 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+extern uint8_t usb_rx_buffer[];
+extern uint8_t usb_rx_index;
+extern uint8_t usb_tx_buffer[];
+extern uint8_t usb_tx_index;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -62,10 +67,8 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-extern uint8_t usb_rx_buffer[];
-extern uint8_t usb_rx_index;
-extern uint8_t usb_tx_buffer[];
-extern uint8_t usb_tx_index;
+int8_t process_usb_command(uint8_t *data, uint16_t len);
+int8_t transmit_complete_callback(uint8_t *Buf, uint32_t *Len, uint8_t epnum);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
