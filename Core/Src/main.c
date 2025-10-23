@@ -78,14 +78,21 @@ int main(void)
   MX_USB_Device_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_FDCAN_ConfigExtendedIdMask(&hfdcan1, 0x1FFFFFFFU);
-  HAL_FDCAN_ConfigExtendedIdMask(&hfdcan2, 0x1FFFFFFFU);
-  HAL_FDCAN_ConfigInterruptLines(&hfdcan1, FDCAN_IT_GROUP_RX_FIFO0, FDCAN_INTERRUPT_LINE0);
+  // HAL_FDCAN_ConfigExtendedIdMask(&hfdcan1, 0x1FFFFFFFU);
+  // HAL_FDCAN_ConfigExtendedIdMask(&hfdcan2, 0x1FFFFFFFU);
+  HAL_FDCAN_ConfigInterruptLines(&hfdcan1, FDCAN_IT_GROUP_RX_FIFO0 | FDCAN_IT_GROUP_RX_FIFO1,
+                                            FDCAN_INTERRUPT_LINE0);
   HAL_FDCAN_ConfigInterruptLines(&hfdcan2, FDCAN_IT_GROUP_RX_FIFO0, FDCAN_INTERRUPT_LINE1);
 
   // Activate CAN RX notifications
-  HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
-  HAL_FDCAN_ActivateNotification(&hfdcan2, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
+  HAL_FDCAN_ActivateNotification(&hfdcan1,
+                                  FDCAN_IT_RX_FIFO0_NEW_MESSAGE | FDCAN_IT_RX_FIFO1_NEW_MESSAGE
+                                  | FDCAN_IT_ERROR_WARNING | FDCAN_IT_ERROR_PASSIVE
+                                  | FDCAN_IT_BUS_OFF, 0);
+  HAL_FDCAN_ActivateNotification(&hfdcan2,
+                                  FDCAN_IT_RX_FIFO0_NEW_MESSAGE |FDCAN_IT_RX_FIFO1_NEW_MESSAGE
+                                  | FDCAN_IT_ERROR_WARNING | FDCAN_IT_ERROR_PASSIVE
+                                  | FDCAN_IT_BUS_OFF, 0);
 
   // Start CAN reception
   HAL_FDCAN_Start(&hfdcan1);
@@ -97,10 +104,6 @@ int main(void)
     2. HAL_FDCAN_AddMessageToTxFifoQ
     3. HAL_FDCAN_ConfigRxFifoOverwrite
   */ 
-
-  // Activate CAN RX notifications
-  HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0);
-  HAL_FDCAN_ActivateNotification(&hfdcan2, FDCAN_IT_RX_FIFO1_NEW_MESSAGE, 0);
 
   /* USER CODE END 2 */
 
@@ -193,8 +196,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
   /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM1)
-  {
+  if (htim->Instance == TIM1) {
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
@@ -210,7 +212,8 @@ void Error_Handler(void)
   /* USER CODE BEGIN Error_Handler_Debug */
   /* USER CODE END Error_Handler_Debug */
 }
-#ifdef USE_FULL_ASSERT
+
+#ifdef  USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.

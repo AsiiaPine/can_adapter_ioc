@@ -89,9 +89,9 @@ static uint8_t can2_terminator_enabled = 0;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-static void process_usb_command(uint8_t *data, uint16_t len);
-static void send_can_message(can_message_t *msg);
-static void receive_can_message(FDCAN_HandleTypeDef *hfdcan, uint8_t channel);
+// static void process_usb_command(uint8_t *data, uint16_t len);
+// static void send_can_message(can_message_t *msg);
+// static void receive_can_message(FDCAN_HandleTypeDef *hfdcan, uint8_t channel);
 static void send_usb_response(uint8_t *data, uint16_t len);
 static void update_led_status(void);
 static void toggle_led(uint16_t pin);
@@ -250,167 +250,167 @@ void SystemClock_Config(void)
 
 /* USB-CAN Converter Helper Functions */
 
-static void process_usb_command(uint8_t *data, uint16_t len)
-{
-    if (len < sizeof(usb_can_frame_t)) {
-        return;
-    }
+// static void process_usb_command(uint8_t *data, uint16_t len)
+// {
+//     if (len < sizeof(usb_can_frame_t)) {
+//         return;
+//     }
     
-    usb_can_frame_t *frame = (usb_can_frame_t*)data;
+//     usb_can_frame_t *frame = (usb_can_frame_t*)data;
     
-    switch (frame->command) {
-        case CMD_CAN_SEND: {
-            can_message_t msg;
-            msg.id = frame->id;
-            msg.dlc = frame->dlc;
-            msg.channel = frame->channel;
-            memcpy(msg.data, frame->data, 8);
-            send_can_message(&msg);
-            break;
-        }
-        case CMD_CAN_STATUS: {
-            uint8_t status_msg[64];
-            int len = snprintf((char*)status_msg, sizeof(status_msg),
-                "CAN1: RX=%lu TX=%lu, CAN2: RX=%lu TX=%lu\r\n",
-                can1_rx_count, can1_tx_count, can2_rx_count, can2_tx_count);
-            send_usb_response(status_msg, len);
-            break;
-        }
-        case CMD_CAN_CONFIG: {
-            if (frame->channel == 1) {
-                can1_terminator_enabled = frame->data[0];
-                HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, 
-                    can1_terminator_enabled ? GPIO_PIN_SET : GPIO_PIN_RESET);
-            } else if (frame->channel == 2) {
-                can2_terminator_enabled = frame->data[0];
-                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, 
-                    can2_terminator_enabled ? GPIO_PIN_SET : GPIO_PIN_RESET);
-            }
-            break;
-        }
-        case CMD_CAN_RESET: {
-            can1_rx_count = 0;
-            can1_tx_count = 0;
-            can2_rx_count = 0;
-            can2_tx_count = 0;
-            uint8_t reset_msg[] = "Counters reset\r\n";
-            send_usb_response(reset_msg, strlen((char*)reset_msg));
-            break;
-        }
-    }
-}
+//     switch (frame->command) {
+//         case CMD_CAN_SEND: {
+//             can_message_t msg;
+//             msg.id = frame->id;
+//             msg.dlc = frame->dlc;
+//             msg.channel = frame->channel;
+//             memcpy(msg.data, frame->data, 8);
+//             send_can_message(&msg);
+//             break;
+//         }
+//         case CMD_CAN_STATUS: {
+//             uint8_t status_msg[64];
+//             int len = snprintf((char*)status_msg, sizeof(status_msg),
+//                 "CAN1: RX=%lu TX=%lu, CAN2: RX=%lu TX=%lu\r\n",
+//                 can1_rx_count, can1_tx_count, can2_rx_count, can2_tx_count);
+//             send_usb_response(status_msg, len);
+//             break;
+//         }
+//         case CMD_CAN_CONFIG: {
+//             if (frame->channel == 1) {
+//                 can1_terminator_enabled = frame->data[0];
+//                 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, 
+//                     can1_terminator_enabled ? GPIO_PIN_SET : GPIO_PIN_RESET);
+//             } else if (frame->channel == 2) {
+//                 can2_terminator_enabled = frame->data[0];
+//                 HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, 
+//                     can2_terminator_enabled ? GPIO_PIN_SET : GPIO_PIN_RESET);
+//             }
+//             break;
+//         }
+//         case CMD_CAN_RESET: {
+//             can1_rx_count = 0;
+//             can1_tx_count = 0;
+//             can2_rx_count = 0;
+//             can2_tx_count = 0;
+//             uint8_t reset_msg[] = "Counters reset\r\n";
+//             send_usb_response(reset_msg, strlen((char*)reset_msg));
+//             break;
+//         }
+//     }
+// }
 
-static void send_can_message(can_message_t *msg)
-{
-    FDCAN_TxHeaderTypeDef tx_header;
-    tx_header.Identifier = msg->id;
-    tx_header.IdType = FDCAN_STANDARD_ID;
-    tx_header.TxFrameType = FDCAN_DATA_FRAME;
-    tx_header.DataLength = msg->dlc;
-    tx_header.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
-    tx_header.BitRateSwitch = FDCAN_BRS_OFF;
-    tx_header.FDFormat = FDCAN_CLASSIC_CAN;
-    tx_header.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
-    tx_header.MessageMarker = 0;
+// static void send_can_message(can_message_t *msg)
+// {
+//     FDCAN_TxHeaderTypeDef tx_header;
+//     tx_header.Identifier = msg->id;
+//     tx_header.IdType = FDCAN_STANDARD_ID;
+//     tx_header.TxFrameType = FDCAN_DATA_FRAME;
+//     tx_header.DataLength = msg->dlc;
+//     tx_header.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+//     tx_header.BitRateSwitch = FDCAN_BRS_OFF;
+//     tx_header.FDFormat = FDCAN_CLASSIC_CAN;
+//     tx_header.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
+//     tx_header.MessageMarker = 0;
     
-    FDCAN_HandleTypeDef *hfdcan = (msg->channel == 1) ? &hfdcan1 : &hfdcan2;
+//     FDCAN_HandleTypeDef *hfdcan = (msg->channel == 1) ? &hfdcan1 : &hfdcan2;
     
-    if (HAL_FDCAN_AddMessageToTxFifoQ(hfdcan, &tx_header, msg->data) == HAL_OK) {
-        if (msg->channel == 1) {
-            can1_tx_count++;
-        } else {
-            can2_tx_count++;
-        }
-    }
-}
+//     if (HAL_FDCAN_AddMessageToTxFifoQ(hfdcan, &tx_header, msg->data) == HAL_OK) {
+//         if (msg->channel == 1) {
+//             can1_tx_count++;
+//         } else {
+//             can2_tx_count++;
+//         }
+//     }
+// }
 
-static void receive_can_message(FDCAN_HandleTypeDef *hfdcan, uint8_t channel)
-{
-    FDCAN_RxHeaderTypeDef rx_header;
-    uint8_t rx_data[8];
+// static void receive_can_message(FDCAN_HandleTypeDef *hfdcan, uint8_t channel)
+// {
+//     FDCAN_RxHeaderTypeDef rx_header;
+//     uint8_t rx_data[8];
     
-    if (HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &rx_header, rx_data) == HAL_OK) {
-        // Check if we have space in the queue
-        uint8_t next_head = (can_rx_queue_head + 1) % CAN_MAX_MESSAGES;
-        if (next_head != can_rx_queue_tail) {
-            can_message_t *msg = &can_rx_queue[can_rx_queue_head];
-            msg->id = rx_header.Identifier;
-            msg->dlc = rx_header.DataLength;
-            msg->channel = channel;
-            memcpy(msg->data, rx_data, 8);
-            can_rx_queue_head = next_head;
+//     if (HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &rx_header, rx_data) == HAL_OK) {
+//         // Check if we have space in the queue
+//         uint8_t next_head = (can_rx_queue_head + 1) % CAN_MAX_MESSAGES;
+//         if (next_head != can_rx_queue_tail) {
+//             can_message_t *msg = &can_rx_queue[can_rx_queue_head];
+//             msg->id = rx_header.Identifier;
+//             msg->dlc = rx_header.DataLength;
+//             msg->channel = channel;
+//             memcpy(msg->data, rx_data, 8);
+//             can_rx_queue_head = next_head;
             
-            if (channel == 1) {
-                can1_rx_count++;
-            } else {
-                can2_rx_count++;
-            }
-        }
-    }
-}
+//             if (channel == 1) {
+//                 can1_rx_count++;
+//             } else {
+//                 can2_rx_count++;
+//             }
+//         }
+//     }
+// }
 
-static void send_usb_response(uint8_t *data, uint16_t len)
-{
-    CDC_Transmit_FS(data, len);
-}
+// static void send_usb_response(uint8_t *data, uint16_t len)
+// {
+//     CDC_Transmit_FS(data, len);
+// }
 
-static void update_led_status(void)
-{
-    static uint32_t led_timer = 0;
-    static uint8_t led_state = 0;
+// static void update_led_status(void)
+// {
+//     static uint32_t led_timer = 0;
+//     static uint8_t led_state = 0;
     
-    led_timer++;
-    if (led_timer >= 500) { // 500ms
-        led_timer = 0;
-        led_state = !led_state;
+//     led_timer++;
+//     if (led_timer >= 500) { // 500ms
+//         led_timer = 0;
+//         led_state = !led_state;
         
-        // Green LED: USB connected
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, led_state ? GPIO_PIN_RESET : GPIO_PIN_SET);
+//         // Green LED: USB connected
+//         HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, led_state ? GPIO_PIN_RESET : GPIO_PIN_SET);
         
-        // Blue LED: CAN activity
-        if (can1_rx_count > 0 || can2_rx_count > 0 || can1_tx_count > 0 || can2_tx_count > 0) {
-            HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_RESET);
-        } else {
-            HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);
-        }
-    }
-}
+//         // Blue LED: CAN activity
+//         if (can1_rx_count > 0 || can2_rx_count > 0 || can1_tx_count > 0 || can2_tx_count > 0) {
+//             HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_RESET);
+//         } else {
+//             HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);
+//         }
+//     }
+// }
 
-static void toggle_led(uint16_t pin)
-{
-    HAL_GPIO_TogglePin(GPIOC, pin);
-}
+// static void toggle_led(uint16_t pin)
+// {
+//     HAL_GPIO_TogglePin(GPIOC, pin);
+// }
 
-/* CAN Interrupt Callbacks */
-void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
-{
-  if(FDCAN1 == hfdcan->Instance){
-    if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != RESET)
-    {
-      /* Retrieve Rx messages from RX FIFO0 */
-      if (RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) {
-        receive_can_message(hfdcan, FDCAN_RX_FIFO0);
-      }
-      }
-    return;
-  }
-  if (FDCAN2 == hfdcan->Instance){
-    if ((RxFifo0ITs & FDCAN_IT_RX_FIFO1_NEW_MESSAGE) != RESET)
-    {
+// /* CAN Interrupt Callbacks */
+// void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
+// {
+//   if(FDCAN1 == hfdcan->Instance){
+//     if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != RESET)
+//     {
+//       /* Retrieve Rx messages from RX FIFO0 */
+//       if (RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) {
+//         receive_can_message(hfdcan, FDCAN_RX_FIFO0);
+//       }
+//       }
+//     return;
+//   }
+//   if (FDCAN2 == hfdcan->Instance){
+//     if ((RxFifo0ITs & FDCAN_IT_RX_FIFO1_NEW_MESSAGE) != RESET)
+//     {
 
-      if (RxFifo0ITs & FDCAN_IT_RX_FIFO1_NEW_MESSAGE) {
-        receive_can_message(hfdcan, FDCAN_RX_FIFO0);
-      }
-      }
-    return;
-  }
-}
+//       if (RxFifo0ITs & FDCAN_IT_RX_FIFO1_NEW_MESSAGE) {
+//         receive_can_message(hfdcan, FDCAN_RX_FIFO0);
+//       }
+//       }
+//     return;
+//   }
+// }
 
-void HAL_FDCAN_TxEventFifoCallback(FDCAN_HandleTypeDef *hfdcan, uint32_t TxEventFifoITs)
-{
-    // Optional: Handle transmission events
-    UNUSED(hfdcan);
-}
+// void HAL_FDCAN_TxEventFifoCallback(FDCAN_HandleTypeDef *hfdcan, uint32_t TxEventFifoITs)
+// {
+//     // Optional: Handle transmission events
+//     UNUSED(hfdcan);
+// }
 
 void HAL_FDCAN_ErrorCallback(FDCAN_HandleTypeDef *hfdcan)
 {
