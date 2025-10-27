@@ -84,6 +84,11 @@ int main(void)
                                             FDCAN_INTERRUPT_LINE0);
   HAL_FDCAN_ConfigInterruptLines(&hfdcan2, FDCAN_IT_GROUP_RX_FIFO0, FDCAN_INTERRUPT_LINE1);
 
+  // if (HAL_FDCAN_ConfigGlobalFilter(&hfdcan1, FDCAN_REJECT, FDCAN_REJECT,
+  //                                            FDCAN_FILTER_REMOTE, FDCAN_FILTER_REMOTE) != HAL_OK) {
+  //   Error_Handler();
+  // }
+
   // Activate CAN RX notifications
   HAL_FDCAN_ActivateNotification(&hfdcan1,
                                   FDCAN_IT_RX_FIFO0_NEW_MESSAGE | FDCAN_IT_RX_FIFO1_NEW_MESSAGE

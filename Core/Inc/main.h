@@ -52,10 +52,7 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-extern uint8_t usb_rx_buffer[];
-extern uint8_t usb_rx_index;
-extern uint8_t usb_tx_buffer[];
-extern uint8_t usb_tx_index;
+
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
