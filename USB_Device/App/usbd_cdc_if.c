@@ -94,6 +94,7 @@ uint8_t UserRxBufferFS[APP_RX_DATA_SIZE];
 uint8_t UserTxBufferFS[APP_TX_DATA_SIZE];
 
 /* USER CODE BEGIN PRIVATE_VARIABLES */
+uint8_t UserTxBufferFS1[APP_TX_DATA_SIZE];
 
 /* USER CODE END PRIVATE_VARIABLES */
 
@@ -153,7 +154,9 @@ static int8_t CDC_Init_FS(void)
 {
   /* USER CODE BEGIN 3 */
   /* Set Application Buffers */
-  USBD_CDC_SetTxBuffer(&hUsbDeviceFS, UserTxBufferFS, 0);
+  USBD_CDC_SetTxBuffer(&hUsbDeviceFS, UserTxBufferFS, 1024, 0);
+  USBD_CDC_SetTxBuffer(&hUsbDeviceFS, UserTxBufferFS1, 1024, 1);
+
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, UserRxBufferFS);
   return (USBD_OK);
   /* USER CODE END 3 */
@@ -286,13 +289,16 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len)
 {
   uint8_t result = USBD_OK;
+  static uint8_t last_classid = 0;
+  last_classid++;
+  last_classid %= 2;
   /* USER CODE BEGIN 7 */
   USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;
   if (hcdc->TxState != 0) {
     return USBD_BUSY;
   }
-  USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, Len);
-  result = USBD_CDC_TransmitPacket(&hUsbDeviceFS);
+  USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, Len, last_classid);
+  result = USBD_CDC_TransmitPacket(&hUsbDeviceFS, last_classid);
   /* USER CODE END 7 */
   return result;
 }

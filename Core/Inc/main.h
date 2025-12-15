@@ -92,6 +92,7 @@ int8_t transmit_complete_callback(uint8_t *Buf, uint32_t *Len, uint8_t epnum);
 
 /* USER CODE BEGIN Private defines */
 
+#define USBD_CMPSIT_ACTIVATE_CDC                           1U
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

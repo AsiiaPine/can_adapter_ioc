@@ -404,7 +404,7 @@ USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *pdev)
   pdev->pData = &hpcd_USB_DRD_FS;
 
   hpcd_USB_DRD_FS.Instance = USB_DRD_FS;
-  hpcd_USB_DRD_FS.Init.dev_endpoints = 8;
+  hpcd_USB_DRD_FS.Init.dev_endpoints = 6;
   hpcd_USB_DRD_FS.Init.Host_channels = 8;
   hpcd_USB_DRD_FS.Init.speed = PCD_SPEED_FULL;
   hpcd_USB_DRD_FS.Init.phy_itface = PCD_PHY_EMBEDDED;
