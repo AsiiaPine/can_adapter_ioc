@@ -95,6 +95,7 @@ uint8_t UserTxBufferFS[APP_TX_DATA_SIZE];
 
 /* USER CODE BEGIN PRIVATE_VARIABLES */
 uint8_t UserTxBufferFS1[APP_TX_DATA_SIZE];
+uint8_t UserRxBufferFS1[APP_RX_DATA_SIZE];
 
 /* USER CODE END PRIVATE_VARIABLES */
 
@@ -157,7 +158,8 @@ static int8_t CDC_Init_FS(void)
   USBD_CDC_SetTxBuffer(&hUsbDeviceFS, UserTxBufferFS, 1024, 0);
   USBD_CDC_SetTxBuffer(&hUsbDeviceFS, UserTxBufferFS1, 1024, 1);
 
-  USBD_CDC_SetRxBuffer(&hUsbDeviceFS, UserRxBufferFS);
+  USBD_CDC_SetRxBufferEp(&hUsbDeviceFS, UserRxBufferFS, 0);
+  USBD_CDC_SetRxBufferEp(&hUsbDeviceFS, UserRxBufferFS1, 1);
   return (USBD_OK);
   /* USER CODE END 3 */
 }
@@ -270,7 +272,8 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len, uint8_t ClassId)
   if (*Len == 1 && (Buf[0] == 0x0)) {
     return USBD_OK;  // Ignore empty commands
   }
-  USBD_CDC_ReceivePacket(&hUsbDeviceFS);
+
+  USBD_CDC_ReceivePacketEp(&hUsbDeviceFS, ClassId);
   if (ClassId == 0) {
     HAL_GPIO_TogglePin(INTERNAL_LED_RED_GPIO_Port, INTERNAL_LED_RED_Pin);
   }
@@ -335,7 +338,6 @@ static int8_t CDC_TransmitCplt_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum)
 uint8_t CDC_Transmit_FS_EndPoint(uint8_t* Buf, uint16_t Len, uint8_t ClassId)
 {
   uint8_t result = USBD_OK;
-  /* USER CODE BEGIN 7 */
   if (ClassId >= hUsbDeviceFS.NumClasses) {
     return USBD_FAIL;
   }
@@ -348,15 +350,12 @@ uint8_t CDC_Transmit_FS_EndPoint(uint8_t* Buf, uint16_t Len, uint8_t ClassId)
 
   // USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, Len, ClassId);
   result = USBD_CDC_TransmitPacket(&hUsbDeviceFS, ClassId);
-  /* USER CODE END 7 */
   return result;
 }
 
 uint8_t USBD_CDC_ReceivePacketEp(USBD_HandleTypeDef *pdev, uint8_t ClassId)
 {
-  uint8_t result = USBD_OK;
-  /* USER CODE BEGIN 8 */
-  if (ClassId > 1) {
+  if (ClassId >= pdev->NumClasses) {
     return USBD_FAIL;
   }
   USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*)pdev->pClassDataCmsit[ClassId];
@@ -386,6 +385,29 @@ uint8_t USBD_CDC_ReceivePacketEp(USBD_HandleTypeDef *pdev, uint8_t ClassId)
 
   return (uint8_t)USBD_OK;
 }
+
+/**
+  * @brief  USBD_CDC_SetRxBufferEp
+  * @param  pdev: device instance
+  * @param  pbuff: Rx Buffer
+  * @param  ClassId: The Class ID of endpoint
+  * @retval status
+  */
+uint8_t USBD_CDC_SetRxBufferEp(USBD_HandleTypeDef *pdev, uint8_t *pbuff, uint8_t ClassId) {
+  if (ClassId >= pdev->NumClasses) {
+    return USBD_FAIL;
+  }
+  USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef *)(pdev->pClassDataCmsit[ClassId]);
+
+  if (hcdc == NULL) {
+    return (uint8_t)USBD_FAIL;
+  }
+
+  hcdc->RxBuffer = pbuff;
+
+  return (uint8_t)USBD_OK;
+}
+
 /* USER CODE END PRIVATE_FUNCTIONS_IMPLEMENTATION */
 
 /**
