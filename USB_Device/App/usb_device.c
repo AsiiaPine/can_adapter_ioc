@@ -2,12 +2,12 @@
 /**
   ******************************************************************************
   * @file           : usb_device.c
-  * @version        : v3.0_Cube
+  * @version        : v1.0_Cube
   * @brief          : This file implements the USB Device
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -27,7 +27,6 @@
 #include "usbd_cdc_if.h"
 
 /* USER CODE BEGIN Includes */
-#include "usbd_def.h"
 #include "usbd_composite_builder.h"
 /* USER CODE END Includes */
 

@@ -48,8 +48,8 @@
   * @{
   */
 /* Define size for the receive and transmit buffer over CDC */
-#define APP_RX_DATA_SIZE  1024
-#define APP_TX_DATA_SIZE  1024
+#define APP_RX_DATA_SIZE  2048
+#define APP_TX_DATA_SIZE  2048
 /* USER CODE BEGIN EXPORTED_DEFINES */
 
 /* USER CODE END EXPORTED_DEFINES */
@@ -108,6 +108,8 @@ extern USBD_CDC_ItfTypeDef USBD_Interface_fops_FS;
 uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
 
 /* USER CODE BEGIN EXPORTED_FUNCTIONS */
+uint8_t CDC_Transmit_FS_EndPoint(uint8_t* Buf, uint16_t Len, uint8_t ClassId);
+uint8_t USBD_CDC_ReceivePacketEp(USBD_HandleTypeDef *pdev, uint8_t ClassId);
 
 /* USER CODE END EXPORTED_FUNCTIONS */
 

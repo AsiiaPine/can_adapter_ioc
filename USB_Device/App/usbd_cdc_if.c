@@ -125,7 +125,7 @@ extern USBD_HandleTypeDef hUsbDeviceFS;
 static int8_t CDC_Init_FS(void);
 static int8_t CDC_DeInit_FS(void);
 static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length);
-static int8_t CDC_Receive_FS(uint8_t* pbuf, uint32_t *Len);
+static int8_t CDC_Receive_FS(uint8_t* pbuf, uint32_t *Len, uint8_t ClassId);
 static int8_t CDC_TransmitCplt_FS(uint8_t *pbuf, uint32_t *Len, uint8_t epnum);
 
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_DECLARATION */
@@ -261,7 +261,7 @@ static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
   * @param  Len: Number of data received (in bytes)
   * @retval Result of the operation: USBD_OK if all operations are OK else USBD_FAIL
   */
-static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
+static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len, uint8_t ClassId)
 {
   /* USER CODE BEGIN 6 */
   if ((Len == NULL) || (*Len == 0)) {
@@ -269,6 +269,13 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
   }
   if (*Len == 1 && (Buf[0] == 0x0)) {
     return USBD_OK;  // Ignore empty commands
+  }
+  USBD_CDC_ReceivePacket(&hUsbDeviceFS);
+  if (ClassId == 0) {
+    HAL_GPIO_TogglePin(INTERNAL_LED_RED_GPIO_Port, INTERNAL_LED_RED_Pin);
+  }
+  if (ClassId == 1) {
+    HAL_GPIO_TogglePin(INTERNAL_LED_BLUE_GPIO_Port, INTERNAL_LED_BLUE_Pin);
   }
   return process_usb_command(Buf, *Len);
 
@@ -289,16 +296,13 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len)
 {
   uint8_t result = USBD_OK;
-  static uint8_t last_classid = 0;
-  last_classid++;
-  last_classid %= 2;
   /* USER CODE BEGIN 7 */
   USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassData;
   if (hcdc->TxState != 0) {
     return USBD_BUSY;
   }
-  USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, Len, last_classid);
-  result = USBD_CDC_TransmitPacket(&hUsbDeviceFS, last_classid);
+  USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, Len, 0);
+  result = USBD_CDC_TransmitPacket(&hUsbDeviceFS, 0);
   /* USER CODE END 7 */
   return result;
 }
@@ -328,7 +332,60 @@ static int8_t CDC_TransmitCplt_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum)
 }
 
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_IMPLEMENTATION */
+uint8_t CDC_Transmit_FS_EndPoint(uint8_t* Buf, uint16_t Len, uint8_t ClassId)
+{
+  uint8_t result = USBD_OK;
+  /* USER CODE BEGIN 7 */
+  if (ClassId >= hUsbDeviceFS.NumClasses) {
+    return USBD_FAIL;
+  }
+  USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassDataCmsit[ClassId];
+  if (hcdc->TxState != 0) {
+    return USBD_BUSY;
+  }
+  memcpy(hcdc->TxBuffer, Buf, Len);
+  hcdc->TxLength = Len;
 
+  // USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, Len, ClassId);
+  result = USBD_CDC_TransmitPacket(&hUsbDeviceFS, ClassId);
+  /* USER CODE END 7 */
+  return result;
+}
+
+uint8_t USBD_CDC_ReceivePacketEp(USBD_HandleTypeDef *pdev, uint8_t ClassId)
+{
+  uint8_t result = USBD_OK;
+  /* USER CODE BEGIN 8 */
+  if (ClassId > 1) {
+    return USBD_FAIL;
+  }
+  USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef*)pdev->pClassDataCmsit[ClassId];
+
+#ifdef USE_USBD_COMPOSITE
+  /* Get the Endpoints addresses allocated for this class instance */
+  uint8_t CDCOutEpAdd = USBD_CoreGetEPAdd(pdev, USBD_EP_OUT, USBD_EP_TYPE_BULK, ClassId);
+#endif /* USE_USBD_COMPOSITE */
+
+  if (pdev->pClassDataCmsit[ClassId] == NULL)
+  {
+    return (uint8_t)USBD_FAIL;
+  }
+
+  if (pdev->dev_speed == USBD_SPEED_HIGH)
+  {
+    /* Prepare Out endpoint to receive next packet */
+    (void)USBD_LL_PrepareReceive(pdev, CDCOutEpAdd, hcdc->RxBuffer,
+                                 CDC_DATA_HS_OUT_PACKET_SIZE);
+  }
+  else
+  {
+    /* Prepare Out endpoint to receive next packet */
+    (void)USBD_LL_PrepareReceive(pdev, CDCOutEpAdd, hcdc->RxBuffer,
+                                 CDC_DATA_FS_OUT_PACKET_SIZE);
+  }
+
+  return (uint8_t)USBD_OK;
+}
 /* USER CODE END PRIVATE_FUNCTIONS_IMPLEMENTATION */
 
 /**
