@@ -94,8 +94,12 @@ uint8_t UserRxBufferFS[APP_RX_DATA_SIZE];
 uint8_t UserTxBufferFS[APP_TX_DATA_SIZE];
 
 /* USER CODE BEGIN PRIVATE_VARIABLES */
-uint8_t UserTxBufferFS1[APP_TX_DATA_SIZE];
-uint8_t UserRxBufferFS1[APP_RX_DATA_SIZE];
+uint8_t cdc_tx_buffers[2][APP_TX_DATA_SIZE];
+uint8_t cdc_rx_buffers[2][APP_RX_DATA_SIZE];
+
+uint32_t cdc_tx_lens[2] = {0, 0};
+uint32_t cdc_rx_lens[2] = {0, 0};
+volatile uint8_t cdc_tx_pending[2] = {0, 0};
 
 /* USER CODE END PRIVATE_VARIABLES */
 
@@ -155,11 +159,11 @@ static int8_t CDC_Init_FS(void)
 {
   /* USER CODE BEGIN 3 */
   /* Set Application Buffers */
-  USBD_CDC_SetTxBuffer(&hUsbDeviceFS, UserTxBufferFS, 1024, 0);
-  USBD_CDC_SetTxBuffer(&hUsbDeviceFS, UserTxBufferFS1, 1024, 1);
+  USBD_CDC_SetTxBuffer(&hUsbDeviceFS, cdc_tx_buffers[0], 1024, 0);
+  USBD_CDC_SetTxBuffer(&hUsbDeviceFS, cdc_tx_buffers[1], 1024, 1);
 
-  USBD_CDC_SetRxBufferEp(&hUsbDeviceFS, UserRxBufferFS, 0);
-  USBD_CDC_SetRxBufferEp(&hUsbDeviceFS, UserRxBufferFS1, 1);
+  USBD_CDC_SetRxBufferEp(&hUsbDeviceFS, cdc_rx_buffers[0], 0);
+  USBD_CDC_SetRxBufferEp(&hUsbDeviceFS, cdc_rx_buffers[1], 1);
   return (USBD_OK);
   /* USER CODE END 3 */
 }
@@ -304,6 +308,7 @@ uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len)
   if (hcdc->TxState != 0) {
     return USBD_BUSY;
   }
+
   USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, Len, 0);
   result = USBD_CDC_TransmitPacket(&hUsbDeviceFS, 0);
   /* USER CODE END 7 */
@@ -335,6 +340,47 @@ static int8_t CDC_TransmitCplt_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum)
 }
 
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_IMPLEMENTATION */
+void CDC_TxScheduler(void)
+{
+    static uint8_t current = 0;
+    static uint8_t last_tx[2]= {0, 0};
+    if (!cdc_tx_pending[current])
+    {
+        current ^= 1;  // switch CDC
+        return;
+    }
+
+    USBD_CDC_HandleTypeDef *hcdc =
+        (USBD_CDC_HandleTypeDef*)hUsbDeviceFS.pClassDataCmsit[current];
+
+    if (hcdc->TxState != 0) {
+      if (HAL_GetTick() - last_tx[current] > 10) {
+        cdc_tx_pending[current] = 0;
+        hcdc->TxState = 0;
+      }
+      return;  // USB busy
+    }
+
+    last_tx[current] = HAL_GetTick();
+    USBD_CDC_SetTxBuffer(&hUsbDeviceFS,
+                         cdc_tx_buffers[current],
+                         cdc_tx_lens[current],
+                         current);
+
+    if (USBD_CDC_TransmitPacket(&hUsbDeviceFS, current) == USBD_OK)
+    {
+        cdc_tx_pending[current] = 0;
+        current ^= 1;
+    }
+}
+
+void CDC_Send(uint8_t ClassId, const uint8_t *data, uint16_t len)
+{
+    memcpy(cdc_tx_buffers[ClassId], data, len);
+    cdc_tx_lens[ClassId] = len;
+    cdc_tx_pending[ClassId] = 1;
+}
+
 uint8_t CDC_Transmit_FS_EndPoint(uint8_t* Buf, uint16_t Len, uint8_t ClassId)
 {
   uint8_t result = USBD_OK;
@@ -345,10 +391,13 @@ uint8_t CDC_Transmit_FS_EndPoint(uint8_t* Buf, uint16_t Len, uint8_t ClassId)
   if (hcdc->TxState != 0) {
     return USBD_BUSY;
   }
-  memcpy(hcdc->TxBuffer, Buf, Len);
-  hcdc->TxLength = Len;
+  memcpy(cdc_tx_buffers[ClassId], Buf, Len);
 
-  // USBD_CDC_SetTxBuffer(&hUsbDeviceFS, Buf, Len, ClassId);
+  USBD_CDC_SetTxBuffer(&hUsbDeviceFS,
+                         cdc_tx_buffers[ClassId],
+                         Len,
+                         ClassId);
+
   result = USBD_CDC_TransmitPacket(&hUsbDeviceFS, ClassId);
   return result;
 }

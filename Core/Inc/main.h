@@ -91,14 +91,14 @@ int8_t transmit_complete_callback(uint8_t *Buf, uint32_t *Len, uint8_t epnum);
 #define CAN1_TERMINATOR_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
-
+#define USBD_MAX_SUPPORTED_CLASS                       3U
 #define USBD_CMPSIT_ACTIVATE_CDC                       1U
 #define USE_USBD_COMPOSITE                             1U
 #define USBD_CMPSIT_ACTIVATE_HID                       0U
 #define USBD_CMPSIT_ACTIVATE_MSC                       0U
 #define USBD_CMPSIT_ACTIVATE_DFU                       0U
 #define USBD_CMPSIT_ACTIVATE_RNDIS                     0U
-#define USBD_CMPSIT_ACTIVATE_CDC_ECM                   1U
+#define USBD_CMPSIT_ACTIVATE_CDC_ECM                   0U
 #define USBD_CMPSIT_ACTIVATE_AUDIO                     0U
 #define USBD_CMPSIT_ACTIVATE_CUSTOMHID                 0U
 #define USBD_CMPSIT_ACTIVATE_VIDEO                     0U

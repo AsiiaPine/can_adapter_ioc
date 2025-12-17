@@ -108,6 +108,9 @@ extern USBD_CDC_ItfTypeDef USBD_Interface_fops_FS;
 uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
 
 /* USER CODE BEGIN EXPORTED_FUNCTIONS */
+void CDC_Send(uint8_t ClassId, const uint8_t *data, uint16_t len);
+void CDC_TxScheduler(void);
+
 uint8_t CDC_Transmit_FS_EndPoint(uint8_t* Buf, uint16_t Len, uint8_t ClassId);
 uint8_t USBD_CDC_ReceivePacketEp(USBD_HandleTypeDef *pdev, uint8_t ClassId);
 uint8_t USBD_CDC_SetRxBufferEp(USBD_HandleTypeDef *pdev, uint8_t *pbuff, uint8_t ClassId);

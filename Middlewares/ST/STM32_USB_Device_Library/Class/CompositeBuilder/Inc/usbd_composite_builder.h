@@ -26,6 +26,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include  "usbd_ioreq.h"
+#include "main.h"
 
 #if USBD_CMPSIT_ACTIVATE_HID == 1U
 #include "usbd_hid.h"

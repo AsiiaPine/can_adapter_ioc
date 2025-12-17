@@ -237,13 +237,14 @@ uint8_t  USBD_CMPSIT_AddClass(USBD_HandleTypeDef *pdev,
                               USBD_CompositeClassTypeDef class,
                               uint8_t cfgidx)
 {
-  if ((pdev->classId < USBD_MAX_SUPPORTED_CLASS) && (pdev->tclasslist[pdev->classId].Active == 0U))
+  static uint8_t classId = 0;
+  if ((classId < USBD_MAX_SUPPORTED_CLASS) && (pdev->tclasslist[classId].Active == 0U))
   {
     /* Store the class parameters in the global tab */
-    pdev->pClass[pdev->classId] = pclass;
-    pdev->tclasslist[pdev->classId].ClassId = pdev->classId;
-    pdev->tclasslist[pdev->classId].Active = 1U;
-    pdev->tclasslist[pdev->classId].ClassType = class;
+    pdev->pClass[classId] = pclass;
+    pdev->tclasslist[classId].ClassId = classId;
+    pdev->tclasslist[classId].Active = 1U;
+    pdev->tclasslist[classId].ClassType = class;
 
     /* Call configuration descriptor builder and endpoint configuration builder */
     if (USBD_CMPSIT_AddToConfDesc(pdev) != (uint8_t)USBD_OK)
@@ -251,7 +252,7 @@ uint8_t  USBD_CMPSIT_AddClass(USBD_HandleTypeDef *pdev,
       return (uint8_t)USBD_FAIL;
     }
   }
-
+  classId++;
   UNUSED(cfgidx);
 
   return (uint8_t)USBD_OK;

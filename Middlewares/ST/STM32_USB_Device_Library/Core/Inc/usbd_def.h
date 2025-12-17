@@ -26,7 +26,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_conf.h"
-
+#include "main.h"
 /** @addtogroup STM32_USBD_DEVICE_LIBRARY
   * @{
   */
