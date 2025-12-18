@@ -64,7 +64,7 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-int8_t process_usb_command(uint8_t *data, uint16_t len);
+int8_t process_usb_command(uint8_t *data, uint16_t len, uint8_t ClassId);
 int8_t transmit_complete_callback(uint8_t *Buf, uint32_t *Len, uint8_t epnum);
 /* USER CODE END EFP */
 

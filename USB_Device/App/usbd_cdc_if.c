@@ -288,7 +288,7 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len, uint8_t ClassId)
   if (ClassId == 1) {
     HAL_GPIO_TogglePin(INTERNAL_LED_BLUE_GPIO_Port, INTERNAL_LED_BLUE_Pin);
   }
-  return process_usb_command(Buf, *Len);
+  return process_usb_command(cdc_rx_buffers[ClassId], cdc_rx_lens[ClassId], ClassId);
 
   /* USER CODE END 6 */
 }
