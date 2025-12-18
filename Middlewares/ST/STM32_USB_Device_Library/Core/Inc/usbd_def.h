@@ -26,7 +26,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_conf.h"
-
+#include "main.h"
 /** @addtogroup STM32_USBD_DEVICE_LIBRARY
   * @{
   */
@@ -244,7 +244,7 @@ struct _USBD_HandleTypeDef;
 
 typedef struct _Device_cb
 {
-  uint8_t (*Init)(struct _USBD_HandleTypeDef *pdev, uint8_t cfgidx);
+  uint8_t (*Init)(struct _USBD_HandleTypeDef *pdev, uint8_t cfgidx, uint8_t classId);
   uint8_t (*DeInit)(struct _USBD_HandleTypeDef *pdev, uint8_t cfgidx);
   /* Control Endpoints*/
   uint8_t (*Setup)(struct _USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef  *req);

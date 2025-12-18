@@ -64,7 +64,7 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-int8_t process_usb_command(uint8_t *data, uint16_t len);
+int8_t process_usb_command(uint8_t *data, uint16_t len, uint8_t ClassId);
 int8_t transmit_complete_callback(uint8_t *Buf, uint32_t *Len, uint8_t epnum);
 /* USER CODE END EFP */
 
@@ -91,6 +91,22 @@ int8_t transmit_complete_callback(uint8_t *Buf, uint32_t *Len, uint8_t epnum);
 #define CAN1_TERMINATOR_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
+#define USBD_MAX_SUPPORTED_CLASS                       3U
+#define USBD_CMPSIT_ACTIVATE_CDC                       1U
+#define USE_USBD_COMPOSITE                             1U
+#define USBD_CMPSIT_ACTIVATE_HID                       0U
+#define USBD_CMPSIT_ACTIVATE_MSC                       0U
+#define USBD_CMPSIT_ACTIVATE_DFU                       0U
+#define USBD_CMPSIT_ACTIVATE_RNDIS                     0U
+#define USBD_CMPSIT_ACTIVATE_CDC_ECM                   0U
+#define USBD_CMPSIT_ACTIVATE_AUDIO                     0U
+#define USBD_CMPSIT_ACTIVATE_CUSTOMHID                 0U
+#define USBD_CMPSIT_ACTIVATE_VIDEO                     0U
+#define USBD_CMPSIT_ACTIVATE_PRINTER                   0U
+#define USBD_CMPSIT_ACTIVATE_CCID                      0U
+#define USBD_CMPSIT_ACTIVATE_MTP                       0U
+#define USBD_CLASS_BOS_ENABLED                         0U
+
 
 /* USER CODE END Private defines */
 

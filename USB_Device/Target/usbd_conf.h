@@ -54,6 +54,9 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
+#ifndef USE_USBD_COMPOSITE
+#define USE_USBD_COMPOSITE 1U
+#endif
 /* USER CODE END PV */
 /**
   * @}
@@ -65,7 +68,7 @@
   */
 
 /*---------- -----------*/
-#define USBD_MAX_NUM_INTERFACES     1U
+#define USBD_MAX_NUM_INTERFACES     2U
 /*---------- -----------*/
 #define USBD_MAX_NUM_CONFIGURATION     1U
 /*---------- -----------*/
@@ -73,7 +76,7 @@
 /*---------- -----------*/
 #define USBD_DEBUG_LEVEL     3U
 /*---------- -----------*/
-#define USBD_LPM_ENABLED     1U
+#define USBD_LPM_ENABLED     0U
 /*---------- -----------*/
 #define USBD_SELF_POWERED     0U
 

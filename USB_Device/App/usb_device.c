@@ -2,12 +2,12 @@
 /**
   ******************************************************************************
   * @file           : usb_device.c
-  * @version        : v3.0_Cube
+  * @version        : v1.0_Cube
   * @brief          : This file implements the USB Device
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2025 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -27,7 +27,7 @@
 #include "usbd_cdc_if.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "usbd_composite_builder.h"
 /* USER CODE END Includes */
 
 /* USER CODE BEGIN PV */
@@ -50,6 +50,9 @@ extern USBD_DescriptorsTypeDef CDC_Desc;
  */
 /* USER CODE BEGIN 0 */
 
+uint8_t CDC_EpAdd_Inst1[3] = {CDC_IN_EP, CDC_OUT_EP, CDC_CMD_EP}; /* CDC Endpoint Adress First Instance */
+uint8_t CDC_EpAdd_Inst2[3] = {SECOND_CDC_IN_EP, SECOND_CDC_OUT_EP, SECOND_CDC_CMD_EP}; /* CDC Endpoint Adress Second Instance */
+
 /* USER CODE END 0 */
 
 /*
@@ -69,21 +72,30 @@ void MX_USB_Device_Init(void)
 
   /* USER CODE END USB_Device_Init_PreTreatment */
 
+  /* USER CODE BEGIN USB_Device_Init_PostTreatment */
+
   /* Init Device Library, add supported class and start the library. */
   if (USBD_Init(&hUsbDeviceFS, &CDC_Desc, DEVICE_FS) != USBD_OK) {
     Error_Handler();
   }
-  if (USBD_RegisterClass(&hUsbDeviceFS, &USBD_CDC) != USBD_OK) {
-    Error_Handler();
+  USBD_RegisterClassComposite(&hUsbDeviceFS, USBD_CDC_CLASS, CLASS_TYPE_CDC, CDC_EpAdd_Inst1);
+  USBD_RegisterClassComposite(&hUsbDeviceFS, USBD_CDC_CLASS, CLASS_TYPE_CDC, CDC_EpAdd_Inst2);
+
+  /* Add CDC Interface Class */
+  if (USBD_CMPSIT_SetClassID(&hUsbDeviceFS, CLASS_TYPE_CDC, 0) != 0xFF)
+  {
+    USBD_CDC_RegisterInterface(&hUsbDeviceFS, &USBD_Interface_fops_FS);
   }
-  if (USBD_CDC_RegisterInterface(&hUsbDeviceFS, &USBD_Interface_fops_FS) != USBD_OK) {
-    Error_Handler();
+
+  /* Add CDC Interface Class */
+  if (USBD_CMPSIT_SetClassID(&hUsbDeviceFS, CLASS_TYPE_CDC, 1) != 0xFF)
+  {
+    USBD_CDC_RegisterInterface(&hUsbDeviceFS, &USBD_Interface_fops_FS);
   }
+
   if (USBD_Start(&hUsbDeviceFS) != USBD_OK) {
     Error_Handler();
   }
-  /* USER CODE BEGIN USB_Device_Init_PostTreatment */
-
   /* USER CODE END USB_Device_Init_PostTreatment */
 }
 

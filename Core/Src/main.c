@@ -22,6 +22,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define USE_USBD_COMPOSITE 1U
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/

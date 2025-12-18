@@ -51,6 +51,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
+extern USBD_DescriptorsTypeDef COMPOSITE_Desc;
 
 /* USER CODE END PV */
 
@@ -63,6 +64,10 @@
  * -- Insert your variables declaration here --
  */
 /* USER CODE BEGIN VARIABLES */
+
+#define SECOND_CDC_OUT_EP                     0x02  /* EP2 for CDC data OUT Second Instance */
+#define SECOND_CDC_IN_EP                      0x83  /* EP4 for CDC data IN Second Instance */
+#define SECOND_CDC_CMD_EP                     0x84  /* EP5 for CDC commands Second Instance */
 
 /* USER CODE END VARIABLES */
 /**
