@@ -464,7 +464,7 @@ USBD_StatusTypeDef USBD_SetClassConfig(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
       {
         pdev->classId = i;
         /* Set configuration  and Start the Class*/
-        if (pdev->pClass[i]->Init(pdev, cfgidx) != 0U)
+        if (pdev->pClass[i]->Init(pdev, cfgidx, i) != 0U)
         {
           ret = USBD_FAIL;
         }
@@ -475,7 +475,7 @@ USBD_StatusTypeDef USBD_SetClassConfig(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
   if (pdev->pClass[0] != NULL)
   {
     /* Set configuration and Start the Class */
-    ret = (USBD_StatusTypeDef)pdev->pClass[0]->Init(pdev, cfgidx);
+    ret = (USBD_StatusTypeDef)pdev->pClass[0]->Init(pdev, cfgidx, 0);
   }
 #endif /* USE_USBD_COMPOSITE */
 

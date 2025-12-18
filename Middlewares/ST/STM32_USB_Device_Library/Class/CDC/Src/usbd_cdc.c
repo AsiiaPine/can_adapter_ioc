@@ -99,7 +99,7 @@ EndBSPDependencies */
   * @{
   */
 
-static uint8_t USBD_CDC_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx);
+static uint8_t USBD_CDC_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx, uint8_t classId);
 static uint8_t USBD_CDC_DeInit(USBD_HandleTypeDef *pdev, uint8_t cfgidx);
 static uint8_t USBD_CDC_Setup(USBD_HandleTypeDef *pdev, USBD_SetupReqTypedef *req);
 static uint8_t USBD_CDC_DataIn(USBD_HandleTypeDef *pdev, uint8_t epnum);
@@ -285,7 +285,7 @@ static uint8_t CDCCmdEpAdd = CDC_CMD_EP;
   * @param  cfgidx: Configuration index
   * @retval status
   */
-static uint8_t USBD_CDC_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
+static uint8_t USBD_CDC_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx, uint8_t ClassId)
 {
   UNUSED(cfgidx);
   USBD_CDC_HandleTypeDef *hcdc;
@@ -294,20 +294,20 @@ static uint8_t USBD_CDC_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
 
   if (hcdc == NULL)
   {
-    pdev->pClassDataCmsit[pdev->classId] = NULL;
+    pdev->pClassDataCmsit[ClassId] = NULL;
     return (uint8_t)USBD_EMEM;
   }
 
   (void)USBD_memset(hcdc, 0, sizeof(USBD_CDC_HandleTypeDef));
 
-  pdev->pClassDataCmsit[pdev->classId] = (void *)hcdc;
-  pdev->pClassData = pdev->pClassDataCmsit[pdev->classId];
+  pdev->pClassDataCmsit[ClassId] = (void *)hcdc;
+  pdev->pClassData = pdev->pClassDataCmsit[ClassId];
 
 #ifdef USE_USBD_COMPOSITE
   /* Get the Endpoints addresses allocated for this class instance */
-  CDCInEpAdd  = USBD_CoreGetEPAdd(pdev, USBD_EP_IN, USBD_EP_TYPE_BULK, (uint8_t)pdev->classId);
-  CDCOutEpAdd = USBD_CoreGetEPAdd(pdev, USBD_EP_OUT, USBD_EP_TYPE_BULK, (uint8_t)pdev->classId);
-  CDCCmdEpAdd = USBD_CoreGetEPAdd(pdev, USBD_EP_IN, USBD_EP_TYPE_INTR, (uint8_t)pdev->classId);
+  CDCInEpAdd  = USBD_CoreGetEPAdd(pdev, USBD_EP_IN, USBD_EP_TYPE_BULK, ClassId);
+  CDCOutEpAdd = USBD_CoreGetEPAdd(pdev, USBD_EP_OUT, USBD_EP_TYPE_BULK, ClassId);
+  CDCCmdEpAdd = USBD_CoreGetEPAdd(pdev, USBD_EP_IN, USBD_EP_TYPE_INTR, ClassId);
 #endif /* USE_USBD_COMPOSITE */
 
   if (pdev->dev_speed == USBD_SPEED_HIGH)
@@ -352,7 +352,7 @@ static uint8_t USBD_CDC_Init(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
   hcdc->RxBuffer = NULL;
 
   /* Init  physical Interface components */
-  ((USBD_CDC_ItfTypeDef *)pdev->pUserData[pdev->classId])->Init();
+  ((USBD_CDC_ItfTypeDef *)pdev->pUserData[ClassId])->Init();
 
   /* Init Xfer states */
   hcdc->TxState = 0U;
