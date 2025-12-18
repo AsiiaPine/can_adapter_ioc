@@ -270,13 +270,17 @@ static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
 static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len, uint8_t ClassId)
 {
   /* USER CODE BEGIN 6 */
-  if ((Len == NULL) || (*Len == 0)) {
-    return USBD_OK;
+  if ((Buf == NULL) || (Len == NULL) || (*Len == 0)) {
+    return USBD_EMEM;
   }
-  if (*Len == 1 && (Buf[0] == 0x0)) {
-    return USBD_OK;  // Ignore empty commands
+  if (ClassId >= hUsbDeviceFS.NumClasses) {
+    return USBD_FAIL;
   }
+  cdc_rx_lens[ClassId] = *Len;
 
+  USBD_CDC_SetRxBufferEp(&hUsbDeviceFS,
+                         cdc_rx_buffers[ClassId],
+                         ClassId);
   USBD_CDC_ReceivePacketEp(&hUsbDeviceFS, ClassId);
   if (ClassId == 0) {
     HAL_GPIO_TogglePin(INTERNAL_LED_RED_GPIO_Port, INTERNAL_LED_RED_Pin);
@@ -367,8 +371,7 @@ void CDC_TxScheduler(void)
                          cdc_tx_lens[current],
                          current);
 
-    if (USBD_CDC_TransmitPacket(&hUsbDeviceFS, current) == USBD_OK)
-    {
+    if (USBD_CDC_TransmitPacket(&hUsbDeviceFS, current) == USBD_OK) {
         cdc_tx_pending[current] = 0;
         current ^= 1;
     }
@@ -392,13 +395,17 @@ uint8_t CDC_Transmit_FS_EndPoint(uint8_t* Buf, uint16_t Len, uint8_t ClassId)
     return USBD_BUSY;
   }
   memcpy(cdc_tx_buffers[ClassId], Buf, Len);
-
+  cdc_tx_lens[ClassId] = Len;
   USBD_CDC_SetTxBuffer(&hUsbDeviceFS,
                          cdc_tx_buffers[ClassId],
-                         Len,
+                         cdc_tx_lens[ClassId],
                          ClassId);
 
   result = USBD_CDC_TransmitPacket(&hUsbDeviceFS, ClassId);
+
+  if (result == USBD_OK) {
+    HAL_GPIO_TogglePin(INTERNAL_LED_GREEN_GPIO_Port, INTERNAL_LED_GREEN_Pin);
+  }
   return result;
 }
 

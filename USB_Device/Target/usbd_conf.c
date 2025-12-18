@@ -445,12 +445,37 @@ USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *pdev)
   HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x80 , PCD_SNG_BUF, 0x58);
   /* USER CODE END EndPoint_Configuration */
   /* USER CODE BEGIN EndPoint_Configuration_CDC */
-  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , CDC_IN_EP , PCD_SNG_BUF, 0xC0);
-  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , CDC_OUT_EP , PCD_SNG_BUF, 0x110);
-  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , CDC_CMD_EP , PCD_SNG_BUF, 0x100);
-  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , SECOND_CDC_IN_EP , PCD_SNG_BUF, 0x120);
-  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , SECOND_CDC_OUT_EP , PCD_SNG_BUF, 0x160);
-  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , SECOND_CDC_CMD_EP , PCD_SNG_BUF, 0x170);
+
+  // HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData, CDC_CMD_EP,        PCD_SNG_BUF, 0x98);
+  // HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData, CDC_OUT_EP,        PCD_SNG_BUF, 0xA0);
+  // HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData, CDC_IN_EP,         PCD_SNG_BUF, 0xE0);
+
+  // HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData, SECOND_CDC_CMD_EP, PCD_SNG_BUF, 0x120);
+  // HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData, SECOND_CDC_OUT_EP, PCD_SNG_BUF, 0x128);
+  // HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData, SECOND_CDC_IN_EP,  PCD_SNG_BUF, 0x168);
+
+  // CDC0 corrupted data from CDC1
+  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x82, PCD_SNG_BUF, 0x080); // CMD IN (8)
+  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x81, PCD_SNG_BUF, 0x088); // BULK IN (64)
+  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x01, PCD_SNG_BUF, 0x0C8); // BULK OUT (64)
+
+  // CDC1
+  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x84, PCD_SNG_BUF, 0x108); // CMD IN (8)
+  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x83, PCD_SNG_BUF, 0x110); // BULK IN (64)
+  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x02, PCD_SNG_BUF, 0x150); // BULK OUT (64)
+
+
+// HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , CDC_IN_EP , PCD_SNG_BUF, 0xC0);
+  // HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , CDC_OUT_EP , PCD_SNG_BUF, 0x110);
+  // HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , CDC_CMD_EP , PCD_SNG_BUF, 0x100);
+  
+    // HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , SECOND_CDC_IN_EP , PCD_SNG_BUF, 0x178);
+    // HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , SECOND_CDC_OUT_EP , PCD_SNG_BUF, 0x1D8);
+    // HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , SECOND_CDC_CMD_EP , PCD_SNG_BUF, 0x1C8);
+
+  // HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , SECOND_CDC_IN_EP , PCD_SNG_BUF, 0x150);
+  // HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , SECOND_CDC_OUT_EP , PCD_SNG_BUF, 0x1A0);
+  // HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , SECOND_CDC_CMD_EP , PCD_SNG_BUF, 0x190);
   /* USER CODE END EndPoint_Configuration_CDC */
 
   return USBD_OK;

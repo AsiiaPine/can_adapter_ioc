@@ -685,6 +685,11 @@ uint8_t  *USBD_CMPSIT_GetFSCfgDesc(uint16_t *length)
 {
   *length = (uint16_t)CurrFSConfDescSz;
 
+  // uint8_t* eps = pdev->tclasslist[classId].EpAdd;
+  // USBD_EpDescTypeDef *pEpCmdDesc = USBD_GetEpDesc(USBD_CDC_CfgDesc, eps[2]);
+  // USBD_EpDescTypeDef *pEpOutDesc = USBD_GetEpDesc(USBD_CDC_CfgDesc, eps[1]);
+  // USBD_EpDescTypeDef *pEpInDesc = USBD_GetEpDesc(USBD_CDC_CfgDesc, eps[0]);
+
   return USBD_CMPSIT_FSCfgDesc;
 }
 

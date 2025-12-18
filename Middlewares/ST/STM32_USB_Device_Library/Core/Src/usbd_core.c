@@ -1129,7 +1129,9 @@ uint8_t USBD_CoreFindEP(USBD_HandleTypeDef *pdev, uint8_t index)
 uint8_t USBD_CoreGetEPAdd(USBD_HandleTypeDef *pdev, uint8_t ep_dir, uint8_t ep_type, uint8_t ClassId)
 {
   uint8_t idx;
-
+  if (ClassId >= pdev->NumClasses) {
+    return 0xFFU;
+  }
   /* Find the EP address in the selected class table */
   for (idx = 0; idx < pdev->tclasslist[ClassId].NumEps; idx++)
   {
