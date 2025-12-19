@@ -282,12 +282,6 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len, uint8_t ClassId)
                          cdc_rx_buffers[ClassId],
                          ClassId);
   USBD_CDC_ReceivePacketEp(&hUsbDeviceFS, ClassId);
-  if (ClassId == 0) {
-    HAL_GPIO_TogglePin(INTERNAL_LED_RED_GPIO_Port, INTERNAL_LED_RED_Pin);
-  }
-  if (ClassId == 1) {
-    HAL_GPIO_TogglePin(INTERNAL_LED_BLUE_GPIO_Port, INTERNAL_LED_BLUE_Pin);
-  }
   return process_usb_command(cdc_rx_buffers[ClassId], cdc_rx_lens[ClassId], ClassId);
 
   /* USER CODE END 6 */
@@ -401,12 +395,7 @@ uint8_t CDC_Transmit_FS_EndPoint(uint8_t* Buf, uint16_t Len, uint8_t ClassId)
                          cdc_tx_lens[ClassId],
                          ClassId);
 
-  result = USBD_CDC_TransmitPacket(&hUsbDeviceFS, ClassId);
-
-  if (result == USBD_OK) {
-    HAL_GPIO_TogglePin(INTERNAL_LED_GREEN_GPIO_Port, INTERNAL_LED_GREEN_Pin);
-  }
-  return result;
+  return USBD_CDC_TransmitPacket(&hUsbDeviceFS, ClassId);
 }
 
 uint8_t USBD_CDC_ReceivePacketEp(USBD_HandleTypeDef *pdev, uint8_t ClassId)
